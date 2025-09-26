@@ -12,6 +12,7 @@ import { RxCross2 } from "react-icons/rx";
 import { clearCategory } from "../../slices/productsSlice";
 import { GoTriangleDown } from "react-icons/go";
 import scrollToSection from "../../utils/scrollToSection";
+import logo from "../../../public/images/logo.webp"
 
 const categories = [
     { name: "Computers & Tablets", url: "/products-list?q=Computers & Tablets" },
@@ -179,7 +180,7 @@ const StickyPart = () => {
                             <Link to="/">
                                 <img
                                     className="w-[110px] sm:w-full object-contain"
-                                    src="/public/images/logo.webp"
+                                    src={logo}
                                     alt="logo"
                                 />
                             </Link>

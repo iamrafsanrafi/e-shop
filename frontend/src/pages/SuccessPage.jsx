@@ -12,7 +12,7 @@ const SuccessPage = () => {
     try {
       await updateUserCart(user.uid, []);
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
     }
   };
 
@@ -23,9 +23,11 @@ const SuccessPage = () => {
   }, [])
 
   useEffect(() => {
+    if(!user.uid) return;
+
     dispatch(clearCart());
     handleUpdateCart();
-  }, [])
+  }, [user]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
