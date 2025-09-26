@@ -4,14 +4,34 @@ import WishlistSection from "../components/WishlistSection";
 import SecuritySection from "../components/SecuritySection";
 import SettingsSection from "../components/SettingsSection";
 import ProductsSection from "../components/ProductsSection";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router";
+import { useEffect } from "react";
+import { clearCategory } from "../slices/productsSlice";
 
 const DashboardPage = () => {
-    const {user} = useSelector(state => state.auth);
+    // Redux states
+    const { user } = useSelector(state => state.auth);
     const { currentTab } = useSelector(state => state.dashboard);
+    const { category } = useSelector(state => state.products);
 
-    if(!user) {
+    // Extra hook
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (category) {
+            dispatch(clearCategory());
+        }
+    }, []);
+
+    // This is used for scrolling back to the top
+    useEffect(() => {
+        if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    }, [])
+
+    if (!user) {
         return <Navigate to="/login" />
     }
 
@@ -23,13 +43,13 @@ const DashboardPage = () => {
             case "Security": return <SecuritySection />;
             case "Settings": return <SettingsSection />;
             case "Products": return <ProductsSection />
-            default: return null;    
+            default: return null;
         }
     };
 
     return (
         <div className="flex min-h-screen bg-gray-50">
-            <main className="p-10">
+            <main className="pt-5 sm:p-10 w-full flex justify-center">
                 {renderSection()}
             </main>
         </div>

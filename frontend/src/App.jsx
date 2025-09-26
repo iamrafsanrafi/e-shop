@@ -52,8 +52,6 @@ const App = () => {
     <>
       <ToastContainer position="top-right"
         autoClose={3000}
-        // toastClassName="!fixed !top-5 !right-5 !z-[9999]"
-        // bodyClassName="!text-sm !font-medium"
         hideProgressBar={false}
         newestOnTop
         closeOnClick

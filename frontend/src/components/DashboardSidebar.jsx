@@ -20,7 +20,7 @@ const DashboardSidebar = () => {
         { label: "Wishlist", icon: <FaHeart /> },
         { label: "Security", icon: <FaLock /> },
         { label: "Settings", icon: <FaCog /> },
-        { label: user.userType === "admin" ? "Products" : "", icon: user.userType === "admin" ? <AiFillProduct /> : "" },
+        { label: user && user.userType === "admin" ? "Products" : "", icon: user && user.userType === "admin" ? <AiFillProduct /> : "" },
     ];
 
     return (

@@ -2,13 +2,12 @@ import CartIcon from "../../icons/CartIcon";
 import UserIcon from "../../icons/UserIcon";
 import Container from "../commonLayouts/Container";
 import logo from "../../../public/images/logo.webp"
-
 import { TfiSearch } from "react-icons/tfi";
 import { Link } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { openMenu } from "../../slices/menuSlice";
+import { openMenu, setInputValue } from "../../slices/menuSlice";
 import { RxCross1 } from "react-icons/rx";
 import { searchProducts } from "../../firebase/firestoreService";
 
@@ -16,31 +15,37 @@ const MiddlePart = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [showProducts, setShowProducts] = useState(false);
     const [products, setProducts] = useState([]);
-    const [searchValue, setSearchValue] = useState("");
 
     const searchRef = useRef(null);
     const productsRef = useRef(null);
+    const inputRef = useRef(null);
     const dispatch = useDispatch();
 
     const { loading, user } = useSelector(state => state.auth);
     const { totalPrice } = useSelector(state => state.cart);
+    const { inputValue } = useSelector(state => state.menu);
 
     const handleOpenMenu = () => {
         dispatch(openMenu())
     }
 
     const handleSearchProducts = (e) => {
-        setSearchValue(e.target.value);
+        dispatch(setInputValue(e.target.value));
+    }
+
+    const handleHideSearchAndClear = () => {
+        setShowSearch(false);
+        dispatch(setInputValue(""));
     }
 
     useEffect(() => {
-        if (!searchValue) {
+        if (!inputValue) {
             setProducts([]);
             return;
         }
 
         const timer = setTimeout(() => {
-            const results = searchProducts(searchValue);
+            const results = searchProducts(inputValue);
 
             results.then(data => {
                 if (data.length > 0) {
@@ -51,7 +56,7 @@ const MiddlePart = () => {
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [searchValue])
+    }, [inputValue])
 
     useEffect(() => {
         const handleHideSearch = (e) => {
@@ -66,7 +71,6 @@ const MiddlePart = () => {
             }
         }
 
-
         document.addEventListener("mousedown", (e) => {
             handleHideSearch(e);
             handleHideProducts(e);
@@ -80,26 +84,49 @@ const MiddlePart = () => {
         }
     }, [])
 
+    // This useEffect is being used for to automatic focus on input when enabled
+    useEffect(() => {
+        if (showSearch) {
+            inputRef.current.focus();
+        }
+
+        if (showSearch) {
+            document.body.style.overflow = "hidden";
+        }
+        else {
+            document.body.style.overflow = "";
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        }
+    }, [showSearch]);
+
     return (
         <Container>
-            <div className={`flex ${showSearch ? "justify-start" : "justify-between"} items-center py-6 sm:py-8 sm:px-5`}>
+            <div id="middle-part" className={`flex ${showSearch ? "justify-start" : "justify-between"} items-center py-4 sm:py-7 sm:px-5`}>
                 <div className="flex items-center gap-2">
                     <FaBars onClick={handleOpenMenu} className={`sm:hidden ${showSearch && "hidden"} text-[#303030] mb-1 text-lg`} />
                     <Link to="/">
                         <img className={`w-[110px] object-cover sm:w-full ${showSearch ? "hidden" : ""}`} src={logo} alt="logo" />
                     </Link>
                 </div>
-                <div className={`flex items-center gap-12 sm:gap-5`}>
-                    <div className={`relative`} ref={searchRef}>
-                        <input value={searchValue} onChange={handleSearchProducts} className={`w-[308px] ${!showSearch && "hidden"} sm:inline text-sm text-[#303030] leading-5 py-[18px] pl-6 pr-11 border border-[#E5E5E5] rounded-[10px] outline-none `} type="text" placeholder="Search Products ..." />
+                <div className={`flex items-center gap-12 sm:gap-5 ${showSearch && "flex-1 justify-center"}`}>
+                    <div className={`relative ${showSearch && "w-[90%]"}`} ref={searchRef}>
+                        <input
+                            ref={inputRef}
+                            value={inputValue}
+                            onChange={handleSearchProducts}
+                            className={`w-full sm:w-[308px] ${!showSearch && "hidden"} sm:inline text-sm text-[#303030] leading-5 py-2 pl-4 pr-9 sm:py-[18px] sm:pl-6 sm:pr-11 border border-[#E5E5E5] rounded-lg outline-none transition duration-200 focus:ring-1 focus:ring-[#FF624C] placeholder:font-semibold `} type="text" placeholder="Search In e-shop"
+                        />
 
                         {/* ----Laptop & Desktop Search Icon---- */}
-                        <TfiSearch className="text-lg font-bold absolute top-[50%] right-6 translate-y-[-50%] hidden sm:block" />
+                        <TfiSearch className={`${showSearch && "inline"} hidden sm:inline text-lg font-bold absolute top-[50%] right-4 sm:right-6 translate-y-[-50%]`} />
 
                         {/* ----Mobile & Tablet Search Icon---- */}
                         <>
                             {showSearch ? (
-                                <RxCross1 onClick={() => setShowSearch(false)} className="text-xl sm:text-lg font-bold absolute top-[45%] right-[-30px] sm:right-6 translate-y-[-50%] mt-1 sm:mt-0 md:hidden" />
+                                <RxCross1 onClick={handleHideSearchAndClear} className="text-xl sm:text-lg font-bold absolute top-[40%] right-[-25px] sm:right-6 translate-y-[-50%] mt-1 sm:mt-0 md:hidden" />
                             ) : (
                                 <TfiSearch onClick={() => setShowSearch(true)} className="text-xl sm:text-lg font-bold absolute top-[50%] right-[-30px] sm:right-6 translate-y-[-50%] mt-1 sm:mt-0 sm:hidden" />
                             )}
@@ -109,9 +136,7 @@ const MiddlePart = () => {
                         {(products.length > 0 && showProducts) && (
                             <ul ref={productsRef} className="absolute left-0 w-full bg-white shadow-lg rounded-md border border-gray-200 mt-1 z-50 max-h-64 overflow-y-auto">
                                 {products.map((p) => (
-                                    <Link key={p.id} to={`/product-details/${p.id}`} onClick={() => {
-                                        setSearchValue("");
-                                    }}>
+                                    <Link key={p.id} to={`/product-details/${p.id}`} onClick={handleHideSearchAndClear}>
                                         <li
                                             className="px-4 py-2 cursor-pointer hover:bg-blue-100 focus:bg-blue-100 focus:outline-none transition-colors duration-200"
                                             tabIndex={0}

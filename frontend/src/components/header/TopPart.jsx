@@ -68,19 +68,19 @@ const TopPart = () => {
     }, []);
 
     return (
-        <div className="border-b border-[#BFBFBF] py-[10px] sm:py-[22px] sm:px-5">
+        <div id="top-part" className="border-b border-[#BFBFBF] py-[10px] sm:py-[22px] sm:px-5">
             <Container>
                 <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-y-[10px] sm:gap-0">
                     {/* Left part */}
                     <div className="flex justify-center gap-10 sm:gap-[50px]">
-                        <Link className="flex items-center gap-2 font-['Montserrat'] leading-5 text-[#303030] relative after:content-[''] after:absolute after:w-[1px] after:h-5 sm:after:h-[32px] after:bg-[#CBCBCB] after:right-[-22px] md::after:right-[-25px] after:top-[50%] after:-translate-1/2 text-[13px] sm:text-sm" to="https://maps.app.goo.gl/DipLafPdoiQoKjnv7" target="_blank">
+                        <Link className="flex items-center gap-2 font-['Montserrat'] leading-5 text-[#303030] relative after:content-[''] after:absolute after:w-[1px] after:h-5 sm:after:h-[32px] after:bg-[#CBCBCB] after:right-[-22px] md:after:right-[-25px] after:top-[50%] after:-translate-1/2 text-[12px] sm:text-[13px] md:text-sm" to="https://maps.app.goo.gl/DipLafPdoiQoKjnv7" target="_blank">
                             <IoLocationOutline size={20} className="hidden sm:inline" />
                             123 Main Street, Anytown USA
                         </Link>
 
-                        <Link className="flex items-center gap-2 font-['Montserrat'] leading-5 text-[#303030] text-[13px] sm:text-sm" to="tel:++XX (XXX) XXX-XXXX">
+                        <Link className="flex items-center gap-2 font-['Montserrat'] leading-5 text-[#303030] text-[12px] sm:text-[13px] md:text-sm" to="tel:++XX (XXX) XXX-XXXX">
                             <BsTelephone size={18} className="hidden sm:inline" />
-                            +XX (XXX) XXX-XXXX
+                            +X (XXX) XXX-XXXX
                         </Link>
                     </div>
 

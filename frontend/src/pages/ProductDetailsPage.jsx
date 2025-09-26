@@ -17,15 +17,27 @@ import { getProduct } from "../firebase/firestoreService";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../slices/cartSlice";
+import { clearCategory } from "../slices/productsSlice";
 
 const ProductDetailsPage = () => {
+    // States
     const [quantity, setQuantity] = useState(1);
-    const [product, setProduct] = useState(null)
+    const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
-    const { id } = useParams();
 
+    // Redux state
+    const { user } = useSelector(state => state.auth);
+    const { category } = useSelector(state => state.products);
+
+    // Extra hooks
+    const { id } = useParams();
     const dispatch = useDispatch();
-    const { user } = useSelector(state => state.auth)
+
+    useEffect(() => {
+        if (category) {
+            dispatch(clearCategory());
+        }
+    }, []);
 
 
     const handleChangeQuantity = (e) => {
@@ -99,7 +111,6 @@ const ProductDetailsPage = () => {
             quantity: quantity
         };
 
-
         dispatch(addToCart(p));
         toast.success("Item added to cart! Please go to your cart and update it.");
     }
@@ -112,6 +123,12 @@ const ProductDetailsPage = () => {
     }
 
     useEffect(() => {
+        if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    }, [])
+
+    useEffect(() => {
         fetchProduct();
     }, [id])
 
@@ -121,9 +138,22 @@ const ProductDetailsPage = () => {
         <div className="sm:px-5 2xl:px-0">
             <Container>
                 <div className="font-['Montserrat'] text-[#303030] text-sm sm:text-base leading-6 flex flex-wrap gap-x-10 gap-y-5 mt-10 sm:mt-16">
-                    <span className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px]">Home</span>
-                    <span className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px]">{product?.category}</span>
+                    <Link
+                        to="/"
+                        className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px]"
+                    >
+                        Home
+                    </Link>
+
+                    <Link 
+                        to={`/products-list?q=${product?.category}`} 
+                        className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px]"
+                    >
+                        {product?.category}
+                    </Link>
+
                     <span className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px]">{product?.type}</span>
+                    
                     <span className="font-bold">{product?.title}</span>
                 </div>
 

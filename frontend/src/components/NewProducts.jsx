@@ -77,7 +77,7 @@ const NewProducts = () => {
         localStorage.setItem("newProducts", JSON.stringify(data));
     }
 
-    // Filtered products based on selected category
+    // Filtered products based on selected category and memorizing it for better performance
     const filteredProducts = useMemo(() => {
         if (!newProducts || newProducts.length === 0) return [];
 
@@ -122,7 +122,7 @@ const NewProducts = () => {
     }, [])
 
     return (
-        <div className="mb-20 sm:px-5 2xl:px-0">
+        <section id="new-arrival" className="mb-20 sm:px-5 2xl:px-0">
             <Container>
                 <div className="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -165,11 +165,11 @@ const NewProducts = () => {
 
                     </div>
                 </div>
-                <div className="mt-12 flex flex-col sm:flex-row items-center justify-center sm:flex-wrap gap-[20px]">
+                <div className="mt-12 flex flex-col sm:flex-row items-center justify-center sm:flex-wrap gap-3">
                     {(!loading && newProducts.length > 0) ? (
-                        filteredProducts.slice(0, limit).map(p => (
+                        (filteredProducts.length > 0) ? filteredProducts.slice(0, limit).map(p => (
                             <ProductLayout key={p.id} title={p.title} images={p.images} type={p.type} discountTag={p.discountTag} discountPercent={p.discountTag ? p.discountPercent : ""} rating={p.rating} totalRatings={p.totalRatings} price={p.price} previousPrice={p.discountTag ? p.previousPrice : ""} tags={p.tags} id={p.id} />
-                        ))
+                        )) : <p className="text-center text-xl sm:text-2xl text-[#303030]">No products available</p>
                     ) : <LoadingSpinner message="Loading New Products..." />}
                 </div>
 
@@ -186,7 +186,7 @@ const NewProducts = () => {
                 }
 
             </Container>
-        </div>
+        </section>
     );
 };
 

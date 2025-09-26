@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "../components/commonLayouts/Container";
 import OrderSummary from "../components/OrderSummary";
 import BillingForm from "../components/BillingForm";
@@ -10,7 +10,13 @@ const CheckoutPage = () => {
     const { user } = useSelector(state => state.auth);
     const navigate = useNavigate();
 
-    if(!user) {
+    useEffect(() => {
+        if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    }, [])
+
+    if (!user) {
         navigate("/login");
     }
 
@@ -56,7 +62,7 @@ const CheckoutPage = () => {
         if (result.error) {
             console.log(result.error);
         }
-        
+
         setLoading(false);
     }
 
@@ -93,7 +99,7 @@ const CheckoutPage = () => {
 
         setErrors(newErrors);
 
-        if(Object.keys(newErrors).length === 0) {
+        if (Object.keys(newErrors).length === 0) {
             makePayment();
         }
         else {

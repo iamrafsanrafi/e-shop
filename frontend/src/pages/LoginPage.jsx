@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { toast } from "react-toastify";
 import { Link, Navigate, useNavigate } from "react-router";
@@ -13,13 +13,19 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
 
     // Extra hooks
-    const naviage = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" })
+        }
+    }, [])
 
     // If user is already logged in navigate to dashboard
     const { user } = useSelector(state => state.auth);
     if (user) {
-        return <Navigate to="/dashboard" />
+        navigate("/dashboard");
     }
 
     // Regular Expressions
@@ -53,7 +59,7 @@ const LoginPage = () => {
                 dispatch(setCart(cart));
 
                 // dispatch(setLoading(true));
-                naviage("/dashboard");
+                navigate("/dashboard");
             })
             .catch(e => {
                 const errorCode = e.code;
@@ -87,13 +93,15 @@ const LoginPage = () => {
 
                 // Setting cart data to redux
                 dispatch(setCart(cart));
-                
-                naviage("/dashboard");
+
+                navigate("/dashboard");
             })
             .catch(e => {
                 toast.error(e.message);
             })
     };
+
+
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-white px-4">
@@ -121,7 +129,7 @@ const LoginPage = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="amelia.watson@eshop.com"
+                            placeholder="email@example.com"
                             required
                             className="py-3 px-4 outline-none border border-[#CBCBCB] rounded-[10px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] text-base w-full"
                         />

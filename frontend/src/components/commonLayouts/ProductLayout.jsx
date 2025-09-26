@@ -44,7 +44,7 @@ const ProductLayout = ({ discountTag = false, images, id, discountPercent, type,
     }
 
     const handleShare = (id) => {
-        const url = `https://eshop-ecommerce-project.vercel.app/product-details/${id}`;
+        const url = `https://eshop-global.vercel.app/product-details/${id}`;
 
         navigator.clipboard.writeText(url)
             .then(() => toast.success("Link copied!"))
@@ -52,7 +52,7 @@ const ProductLayout = ({ discountTag = false, images, id, discountPercent, type,
     }
 
     return (
-        <div className="p-6 group border border-[#C3C3C3] lg:border-transparent sm:hover:border-[#C3C3C3] rounded-[10px] max-w-[285px] relative">
+        <div className="p-6 group border border-[#C3C3C3] rounded-[10px] max-w-[285px] h-[518px] relative">
             <div className="relative">
                 <img className="w-full" loading="lazy" src={images[0]} alt="product image" />
 

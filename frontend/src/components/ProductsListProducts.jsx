@@ -9,6 +9,7 @@ import { setAllProducts } from "../slices/productsSlice";
 import LoadingSpinner from "./LoadingSpinner";
 
 const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
+    // States
     const [currentPage, setCurrentPage] = useState(1);
     const [sortByCategories, setSortByCategories] = useState("None");
     const [sortByPrice, setSortByPrice] = useState("None");
@@ -16,23 +17,30 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
     const [isPriceOpen, setIsPriceOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const localStorageProducts =
-        JSON.parse(localStorage.getItem("allProducts")) || [];
-
-    const categoriesDropdownRef = useRef(null);
-    const priceDropdownRef = useRef(null);
-
-    const dispatch = useDispatch();
+    // Redux states
     const allProducts = useSelector((state) => state.products.allProducts);
     const { minValue, maxValue } = useSelector((state) => state.products);
+    const {category} = useSelector(state => state.products);
+
+    // LocalStorage
+    const localStorageProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
+
+    // Extra hooks
+    const categoriesDropdownRef = useRef(null);
+    const priceDropdownRef = useRef(null);
+    const dispatch = useDispatch();
 
     const itemsPerPage = 16;
 
     const fetchProducts = async () => {
         setLoading(true);
+
         const products = await getProducts();
+
         dispatch(setAllProducts(products));
+
         setLoading(false);
+
         localStorage.setItem("allProducts", JSON.stringify(products));
     };
 
@@ -42,14 +50,20 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
 
         let products = [...allProducts];
 
+        // Checking if specific category is present by navbar options and getting the products
+        if(category) {
+            products = products.filter(p => p.category === category);
+            console.log(products);
+        }
+
         // Sidebar categories
         if (selectedCategories.length > 0) {
-            products = products.filter((p) => selectedCategories.includes(p.category));
+            products = products.filter(p => selectedCategories.includes(p.category));
         }
 
         // Sidebar brands
         if (selectedBrands.length > 0) {
-            products = products.filter((p) => selectedBrands.includes(p.brand));
+            products = products.filter(p => selectedBrands.includes(p.brand));
         }
 
         // Price filter
@@ -100,17 +114,18 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
         selectedBrands,
         minValue,
         maxValue,
+        category
     ]);
 
     const totalItems = filteredProducts.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
-    // ✅ Reset page if filters change
+    // Reset page if filters change
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedCategories, selectedBrands, minValue, maxValue]);
 
-    // ✅ Clamp page if out of bounds
+    // Clamp page if out of bounds
     useEffect(() => {
         if (currentPage > totalPages) {
             setCurrentPage(totalPages);
@@ -176,7 +191,7 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
                         Sort by
                     </span>
 
-                    <div className="flex gap-[45px]">
+                    <div className="flex gap-[45px] lg:pr-5">
                         {/* ----Categories Dropdown---- */}
                         <div
                             className="relative after:content-[''] after:absolute after:w-[1px] after:h-[32px] after:bg-[#CBCBCB] after:top-1/2 after:-right-6 after:-translate-y-1/2"
@@ -260,8 +275,8 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
                 </div>
             </div>
 
-            {/* ----Products Grid---- */}
-            <div className="flex flex-col items-center gap-y-6 sm:flex-row sm:flex-wrap sm:mt-[52px] sm:justify-center sm:gap-5 xl:justify-start">
+            {/* ----Products Layout---- */}
+            <div className="flex flex-col items-center gap-y-6 sm:flex-row sm:flex-wrap sm:mt-[52px] sm:justify-center sm:gap-3">
                 {!loading && currentItems.length > 0 ? (
                     currentItems.map((p) => (
                         <ProductLayout

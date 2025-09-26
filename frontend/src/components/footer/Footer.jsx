@@ -6,6 +6,16 @@ import { BsFillTelephoneFill } from "react-icons/bs";
 import { IoIosMail } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 
+const categories = [
+    { name: "Computers & Tablets", url: "/products-list?q=Computers & Tablets" },
+    { name: "Mobile & Accessories", url: "/products-list?q=Mobiles & Accessories" },
+    { name: "TV & Home Theater", url: "/products-list?q=TV & Home Theater" },
+    { name: "Audio & Headphones", url: "/products-list?q=Audio & Headphones" },
+    { name: "Cameras & Camcorders", url: "/products-list?q=Cameras & Camcorders" },
+    { name: "Gaming Equipment", url: "/products-list?q=Gaming Equipment" },
+    { name: "Home Appliances", url: "/products-list?q=Home Appliances" }
+];
+
 const Footer = () => {
     return (
         <Container>
@@ -46,9 +56,9 @@ const Footer = () => {
                                 <BsFillTelephoneFill className="text-[#303030] opacity-[75%] text-sm sm:text-base" />
                                 <Link
                                     className="absolute top-1/2 -translate-y-1/2 left-[27px] text-[#303030] text-sm sm:text-base font-['Montserrat'] leading-6"
-                                    to="tel:+XX (XXX) XXX-XXXX"
+                                    to="tel:+X (XXX) XXX-XXXX"
                                 >
-                                    +XX (XXX) XXX-XXXX
+                                    +X (XXX) XXX-XXXX
                                 </Link>
                             </li>
                             <li className="relative">
@@ -99,13 +109,13 @@ const Footer = () => {
                     <div>
                         <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Categories</h4>
                         <ul className="flex flex-col gap-3 text-[#303030] font-['Montserrat'] leading-6 mt-6">
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Computers & Tablets</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Mobile Phones & Accessories</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">TV & Home Theater</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Audio & Headphones</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Cameras & Camcorders</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Gaming Equipment</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Home Appliances</Link></li>
+                            {
+                                categories.map(c => (
+                                    <li>
+                                        <Link to={c.url} className="text-sm sm:text-base hover:underline">{c.name}</Link>
+                                    </li>
+                                ))   
+                            }
                         </ul>
                     </div>
 

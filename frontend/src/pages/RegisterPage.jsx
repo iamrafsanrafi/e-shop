@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { toast } from "react-toastify";
 import { handleCreateUser, handleSignInWithGoogle } from "../firebase/authService";
@@ -14,6 +14,12 @@ const RegisterPage = () => {
 
     // Extra hooks
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    }, [])
 
     // If user is already logged in navigate to dashboard
     const { user } = useSelector(state => state.auth);
@@ -87,7 +93,7 @@ const RegisterPage = () => {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-white px-4">
+        <div className="flex items-center justify-center min-h-screen bg-white px-4 mt-10 mb-10">
             <div className="w-full max-w-lg border border-[#CBCBCB] rounded-[12px] p-8 sm:p-10 shadow-sm">
                 {/* Title */}
                 <h2 className="text-[#303030] font-['Poppins'] text-[22px] sm:text-3xl font-semibold leading-[36px] text-center">
@@ -131,7 +137,7 @@ const RegisterPage = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="amelia.watson@eshop.com"
+                            placeholder="email@example.com"
                             required
                             className="py-3 px-4 outline-none border border-[#CBCBCB] rounded-[10px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] text-base w-full"
                         />

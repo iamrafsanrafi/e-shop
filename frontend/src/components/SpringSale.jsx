@@ -16,6 +16,7 @@ import { Link } from "react-router";
 // ---- PC Slider Arrow Function ----
 function SampleNextArrow(props) {
     const { className, style, onClick } = props;
+
     return (
         <div
             style={{
@@ -28,7 +29,7 @@ function SampleNextArrow(props) {
                 height: "72px",
                 border: "1px solid #303030",
                 borderRadius: "50%",
-                right: "-30px",
+                right: "0px",
                 zIndex: 10
             }}
             className={className}
@@ -137,6 +138,7 @@ const SpringSale = () => {
         // autoplay: true,
         autoplaySpeed: 2000,
         cssEase: "linear",
+        prevArrow: <></>,
         nextArrow: <SampleNextArrow />,
         responsive: [
             {
@@ -172,9 +174,9 @@ const SpringSale = () => {
     };
 
     return (
-        <div className="mb-20 py-16 sm:px-8 2xl:px-0" style={{ background: "url('/images/spring-sale-bg.png')" }}>
+        <section id="spring-sale" className="mb-20 py-16 sm:px-8 2xl:px-0" style={{ background: "url('/images/spring-sale-bg.png')" }}>
             <Container>
-                <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center">
+                <div className="flex flex-col lg:flex-row lg:justify-center lg:gap-x-6 xl:gap-x-3 lg:items-center">
                     {/* ---- Timer ---- */}
                     <div className="relative">
                         <h2 className="text-[#303030] text-[35px] sm:text-[42px] md:text-[56px] font-semibold font-['Poppins'] leading-[68px]">Spring Sale</h2>
@@ -217,9 +219,9 @@ const SpringSale = () => {
                     </div>
 
                     {/* ---- Slider ---- */}
-                    <div className=" ">
+                    <div>
                         {(!loading && springSaleProducts.length > 0) ? (
-                            <Slider {...settings} className="mt-12 sm:max-w-[464px] md:min-w-full xl:max-w-[950px]">
+                            <Slider {...settings} className="mt-12 max-w-[490px] md:min-w-full xl:max-w-[830px] 2xl:max-w-[960px]">
                                 {springSaleProducts.map(p => (
                                     <ProductLayout2 key={p.id} title={p.title} images={p.images} type={p.type} discountTag={p.discountTag} discountPercent={p.discountTag ? p.discountPercent : ""} rating={p.rating} totalRatings={p.totalRatings} price={p.price} previousPrice={p.discountTag ? p.previousPrice : ""} stock={p.stock} tags={p.tags} id={p.id} />
                                 ))}
@@ -228,7 +230,7 @@ const SpringSale = () => {
                     </div>
                 </div>
             </Container>
-        </div>
+        </section>
     );
 };
 

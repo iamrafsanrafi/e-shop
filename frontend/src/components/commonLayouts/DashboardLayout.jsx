@@ -7,7 +7,7 @@ const DashboardLayout = () => {
         <div>
             <Header />
             <div className="flex mt-6 border-t border-gray-200">
-                <DashboardSidebar />
+                {/* <DashboardSidebar /> */}
                 <div className="flex-1">
                     <Outlet />
                 </div>

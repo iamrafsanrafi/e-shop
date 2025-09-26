@@ -82,7 +82,7 @@ const RelatedProducts = ({ category }) => {
                     <h2 className="text-[22px] sm:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Related Products</h2>
                     <Link to="/products-list" className="flex items-center text-[13px] sm:text-base text-[#FF624C] font-['Montserrat'] font-bold leading-6 gap-4 cursor-pointer">View All <LongArrowIcon /></Link>
                 </div>
-                <div className="mt-10 sm:mt-12 flex items-start justify-center lg:justify-between flex-wrap gap-y-5 lg:gap-y-0 sm:gap-x-[20px]">
+                <div className="mt-10 sm:mt-12 flex items-start justify-center flex-wrap gap-y-5 lg:gap-y-3 sm:gap-x-3">
                     {
                         (!loading && relatedProducts.length > 0) ? <>
                             {relatedProducts.slice(0, limit).map(p => (

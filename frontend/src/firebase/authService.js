@@ -3,7 +3,6 @@ import auth from "./firebaseconfig";
 
 const provider = new GoogleAuthProvider();
 
-
 export function handleCreateUser(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
 }

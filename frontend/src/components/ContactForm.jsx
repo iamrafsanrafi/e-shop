@@ -35,26 +35,29 @@ const ContactForm = () => {
             <h2 className="text-[#303030] font-['Poppins'] text-[22px] sm:text-4xl font-semibold leading-[46px]">Contact Us</h2>
             <p className="text-[#303030] font-['Montserrat'] sm:text-xl leading-[30px] mt-3">Have any questions for us? Don’t hesitate to contact us.</p>
 
-            <form onSubmit={handleSubmit} className="md:w-[870px] flex flex-col xl:flex-row xl:flex-wrap justify-between gap-y-4 sm:gap-y-8 mt-10 mb-8">
+            <form onSubmit={handleSubmit} className="xl:w-[800px] lg:w-[600px] w-full flex flex-col xl:flex-row xl:flex-wrap justify-between gap-y-4 sm:gap-y-8 mt-10 mb-8">
                 {/* Name */}
                 <div className="flex flex-col gap-3">
                     <label className=" sm:text-xl text-[#303030] font-['Montserrat'] font-bold leading-[30px]" htmlFor="name"> Name <span className="text-[#FF624C]">*</span></label>
-                    <input className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] sm:w-[80%] xl:w-[870px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" type="text" id="name" placeholder="Amelia Robert Watson" />
+                    <input className="py-4 md:py-[20px] px-6 sm:px-[28px] outline-none border border-[#CBCBCB] rounded-[10px] w-[95%] sm:w-[95%] lg:w-[570px] xl:w-[800px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" type="text" id="name" placeholder="Amelia Robert Watson" />
                 </div>
+
                 {/* Phone Number */}
                 <div className="flex flex-col gap-3">
                     <label className="sm:text-xl text-[#303030] font-['Montserrat'] font-bold leading-[30px]" htmlFor="number">Phone Number</label>
-                    <input className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] sm:w-[80%] xl:w-[345px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" type="text" id="number" placeholder="+XX (XXX) XXX-XXXX" />
+                    <input className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[95%] sm:w-[95%] lg:w-[570px] xl:w-[345px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" type="text" id="number" placeholder="+X (XXX) XXX-XXXX" />
                 </div>
+
                 {/* Email Address */}
                 <div className="flex flex-col gap-3">
                     <label className="sm:text-xl text-[#303030] font-['Montserrat'] font-bold leading-[30px]" htmlFor="email">Email Address <span className="text-[#FF624C]">*</span></label>
-                    <input className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] sm:w-[80%] xl:w-[510px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" type="email" id="email" placeholder="email@example.com" />
+                    <input className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[95%] sm:w-[95%] lg:w-[570px] xl:w-[440px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" type="email" id="email" placeholder="email@example.com" />
                 </div>
+
                 {/* Message */}
                 <div className="flex flex-col gap-3">
                     <label className="sm:text-xl text-[#303030] font-['Montserrat'] font-bold leading-[30px]" htmlFor="message">Message <span className="text-[#FF624C]">*</span></label>
-                    <textarea className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] sm:w-[80%] xl:w-[870px] h-[241px] resize-none text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" id="message" placeholder="Your message here..." rows="4"></textarea>
+                    <textarea className="py-4 md:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[95%] sm:w-[95%] lg:w-[570px] xl:w-[800px] h-[241px] resize-none text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] md:text-xl leading-[30px]" id="message" placeholder="Your message here..." rows="4"></textarea>
                 </div>
 
                 <div className="sm:hidden">

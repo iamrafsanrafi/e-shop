@@ -3,24 +3,49 @@ import Container from "../components/commonLayouts/Container";
 import CartProduct from "../components/CartProduct";
 import Button from "../components/Button";
 import Facilities from "../components/Facilities";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUserCart } from "../firebase/firestoreService.js"
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import { clearCategory } from "../slices/productsSlice.js";
 
 const CartPage = () => {
+    // State
+    const [loading, setLoading] = useState(false);
+
+    // Redux states
     const { user } = useSelector(state => state.auth);
     const cartProducts = useSelector(state => state.cart.items);
     const { totalPrice } = useSelector(state => state.cart);
-    const [loading, setLoading] = useState(false);
+    const { category } = useSelector(state => state.products);
 
+    // Extra hook
+    const dispatch = useDispatch();
+
+    // Used for clearing the category from redux
+    useEffect(() => {
+        if (category) {
+            dispatch(clearCategory());
+        }
+    }, []);
+
+    // Used for scrolling back to top
+    useEffect(() => {
+        if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    }, []);
+
+
+    // If no user found then navigating user to login page
     if (!user) {
         return <Navigate to="/login" />
     }
 
     const handleUpdateCart = async () => {
         setLoading(true);
+        
         try {
             await updateUserCart(user.uid, cartProducts || []);
             toast.success("Cart updated successfully!");
@@ -31,7 +56,6 @@ const CartPage = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="sm:px-5 2xl:px-0">
@@ -51,14 +75,6 @@ const CartPage = () => {
 
                 {/* Cart products table */}
                 <table className="w-full border-separate border-spacing-y-4">
-                    <thead className="hidden md:table-header-group bg-[#F4F4F4] rounded-[15px]">
-                        <tr>
-                            <th className="text-left px-6 py-4 uppercase text-[#303030] font-['Montserrat'] font-bold leading-6">Product</th>
-                            <th className="text-left px-6 py-4 uppercase text-[#303030] font-['Montserrat'] font-bold leading-6">Price</th>
-                            <th className="text-left px-6 py-4 uppercase text-[#303030] font-['Montserrat'] font-bold leading-6">Qty</th>
-                            <th className="text-left px-6 py-4 uppercase text-[#303030] font-['Montserrat'] font-bold leading-6">Total</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         {cartProducts.map(product => (
                             <CartProduct
@@ -69,12 +85,10 @@ const CartPage = () => {
                                 images={product.images}
                                 variant={"Black"}
                                 price={product.price}
-                                totalPrice={product.price}
                             />
                         ))}
                     </tbody>
                 </table>
-
 
                 <div className="text-right mt-8 mb-8 md:mb-0">
                     <div className="lg:hidden flex items-center justify-between">

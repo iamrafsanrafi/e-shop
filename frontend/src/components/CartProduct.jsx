@@ -5,7 +5,7 @@ import CartQuantity from "./CartQuantity";
 import { removeFromCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
 
-const CartProduct = ({ id, type, title, images, variant, price, totalPrice }) => {
+const CartProduct = ({ id, type, title, images, variant, price }) => {
     const dispatch = useDispatch();
 
     const handleRemoveFromCart = () => {
@@ -13,7 +13,7 @@ const CartProduct = ({ id, type, title, images, variant, price, totalPrice }) =>
     };
 
     const handleShare = (id) => {
-        const url = `https://eshop-ecommerce-project.vercel.app/product-details/${id}`;
+        const url = `https://eshop-global.vercel.app/product-details/${id}`;
 
         navigator.clipboard.writeText(url)
         .then(() => toast.success("Link copied!"))
@@ -23,9 +23,9 @@ const CartProduct = ({ id, type, title, images, variant, price, totalPrice }) =>
     return (
         <tr>
             <td colSpan={5} className="relative">
-                <div className="rounded-[10px] border border-[#CBCBCB] lg:border-transparent lg:hover:border-[#CBCBCB] transition px-[36px] py-[24px] flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="rounded-[10px] border border-[#CBCBCB] transition p-5 sm:px-[36px] sm:py-[24px] flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
-                    {/* Product */}
+                    {/* ----Product---- */}
                     <div className="flex items-center gap-6">
                         <img
                             src={images[0]}
@@ -48,20 +48,15 @@ const CartProduct = ({ id, type, title, images, variant, price, totalPrice }) =>
 
                     {/* Price */}
                     <div className="text-[#303030] font-['Poppins'] text-lg lg:text-xl font-semibold leading-[30px]">
-                        <span className="md:hidden font-bold">Price: </span>${price}
+                        <span className=" font-bold">Price: </span>${price}
                     </div>
 
-                    {/* Quantity */}
+                    {/* ----Quantity---- */}
                     <div>
                         <CartQuantity id={id} />
                     </div>
 
-                    {/* Total */}
-                    <div className="text-[#303030] font-['Poppins'] text-lg lg:text-xl font-semibold leading-[30px]">
-                        <span className="md:hidden font-bold">Total: </span>${totalPrice}
-                    </div>
-
-                    {/* Actions – desktop */}
+                    {/* ----Actions – desktop---- */}
                     <div className="hidden lg:flex flex-col gap-4 items-center">
                         <button
                             aria-label="Remove from cart"
@@ -79,8 +74,8 @@ const CartProduct = ({ id, type, title, images, variant, price, totalPrice }) =>
                         </button>
                     </div>
 
-                    {/* Actions – mobile & tablet absolute */}
-                    <div className="lg:hidden absolute top-1/2 sm:top-4 -translate-y-1/2 sm:translate-y-0 right-4 flex flex-col sm:flex-row gap-3">
+                    {/* ----Actions – mobile & tablet absolute---- */}
+                    <div className="lg:hidden absolute bottom-4 sm:top-2 sm:translate-y-0 right-4 flex flex-row gap-3">
                         <button
                             aria-label="Remove from cart"
                             onClick={handleRemoveFromCart}

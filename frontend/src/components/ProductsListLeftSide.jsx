@@ -1,10 +1,100 @@
 import { useEffect, useRef, useState } from "react";
 import { TfiAngleDown } from "react-icons/tfi";
 import { VscSettings } from "react-icons/vsc";
-import { useDispatch } from "react-redux";
-import { setMax, setMin } from "../slices/productsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategory, setFromNavbar, setMax, setMin } from "../slices/productsSlice";
+
+const categories = [
+    {
+        id: 1,
+        title: "Computers & Tablets"
+    },
+    {
+        id: 2,
+        title: "Mobiles & Accessories"
+    },
+    {
+        id: 3,
+        title: "TV & Home Theater"
+    },
+    {
+        id: 4,
+        title: "Audio & Headphones"
+    },
+    {
+        id: 5,
+        title: "Cameras & Camcorders"
+    },
+    {
+        id: 6,
+        title: "Gaming Equipment"
+    },
+    {
+        id: 7,
+        title: "Home Appliances"
+    }
+];
+
+const brands = [
+    {
+        id: 1,
+        title: "Apple",
+        available: 5,
+    },
+    {
+        id: 2,
+        title: "Samsung",
+        available: 8,
+    },
+    {
+        id: 3,
+        title: "ASUS",
+        available: 2,
+    },
+    {
+        id: 4,
+        title: "Dell",
+        available: 2,
+    },
+    {
+        id: 5,
+        title: "Lenovo",
+        available: 1,
+    },
+    {
+        id: 6,
+        title: "HP",
+        available: 2,
+    },
+    {
+        id: 7,
+        title: "Panasonic",
+        available: 2,
+    },
+    {
+        id: 8,
+        title: "Sony",
+        available: 7,
+    },
+    {
+        id: 9,
+        title: "LG",
+        available: 4,
+    },
+    {
+        id: 10,
+        title: "Microsoft",
+        available: 2,
+    },
+    {
+        id: 11,
+        title: "GoPro",
+        available: 1,
+    },
+]
 
 const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selectedBrands, setSelectedBrands }) => {
+    // States
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showCategories, setShowCategories] = useState(true);
     const [showBrands, setShowBrands] = useState(true);
@@ -16,9 +106,19 @@ const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selec
     const [minInput, setMinInput] = useState("0");
     const [maxInput, setMaxInput] = useState("5000");
 
+    // Redux states
+    const reduxCategory = useSelector(state => state.products.category);
+    const { isFromNavbar } = useSelector(state => state.products);
+
+    // Extra hooks
     const dispatch = useDispatch();
     const timerRef = useRef(null);
 
+    // Variables
+    const minPercent = (minValue / 5000) * 100;
+    const maxPercent = (maxValue / 5000) * 100;
+
+    // Functions
     const handleMinInputChange = (e) => {
         const value = e.target.value;
         setMinInput(value);
@@ -54,95 +154,17 @@ const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selec
         }
     }
 
-    const minPercent = (minValue / 5000) * 100;
-    const maxPercent = (maxValue / 5000) * 100;
-
-    const categories = [
-        {
-            id: 1,
-            title: "Computers & Tablets"
-        },
-        {
-            id: 2,
-            title: "Mobiles & Accessories"
-        },
-        {
-            id: 3,
-            title: "TV & Home Theater"
-        },
-        {
-            id: 4,
-            title: "Audio & Headphones"
-        },
-        {
-            id: 5,
-            title: "Cameras & Camcorders"
-        },
-        {
-            id: 6,
-            title: "Gaming Equipment"
-        },
-        {
-            id: 7,
-            title: "Home Appliances"
-        }
-    ];
-
-    const brands = [
-        {
-            id: 1,
-            title: "Apple",
-            available: 11,
-        },
-        {
-            id: 2,
-            title: "Samsung",
-            available: 11,
-        },
-        {
-            id: 3,
-            title: "ASUS",
-            available: 11,
-        },
-        {
-            id: 4,
-            title: "Dell",
-            available: 11,
-        },
-        {
-            id: 5,
-            title: "Lenovo",
-            available: 22,
-        },
-        {
-            id: 6,
-            title: "HP",
-            available: 23,
-        },
-        {
-            id: 7,
-            title: "Panasonic",
-            available: 17,
-        },
-        {
-            id: 8,
-            title: "Sony",
-            available: 11,
-        },
-        {
-            id: 9,
-            title: "LG",
-            available: 11,
-        },
-        {
-            id: 10,
-            title: "Microsoft",
-            available: 21,
-        }
-    ]
-
     // Category changing function
     const handleCategoryChange = (category) => {
+        // Blocking to change category if the request is from navbar
+        if (isFromNavbar) return;
+
+        // Clearing redux states when user manually selectes categories
+        if (reduxCategory) {
+            dispatch(setCategory(""));
+            dispatch(setFromNavbar(false));
+        }
+
         setSelectedCategories(prev => {
             if (prev.includes(category)) {
                 return prev.filter(c => c !== category);
@@ -174,7 +196,8 @@ const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selec
         timerRef.current = setTimeout(() => {
             dispatch(setMin(minValue));
             dispatch(setMax(maxValue));
-        }, 500);
+        }, 700);
+
     }, [minValue, maxValue, dispatch])
 
     // useEffect to handle body scroll lock when the sidebar is open
@@ -206,9 +229,19 @@ const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selec
                     <ul className="flex flex-col gap-3 border-b border-[#CFCFCF] pb-10">
                         {categories.map(category => (
                             <li key={category.id} className="flex items-center gap-2">
-                                <input value={category.title} checked={selectedCategories.includes(category.title) || null} onChange={() => handleCategoryChange(category.title)} type="checkbox" id={category.title} />
+                                <input
+                                    value={category.title}
+                                    checked={selectedCategories.includes(category.title) || (reduxCategory !== "" && reduxCategory === category.title)}
+                                    onChange={() => handleCategoryChange(category.title)}
+                                    disabled={isFromNavbar && reduxCategory !== category.title}
+                                    type="checkbox"
+                                    id={category.title}
+                                />
 
-                                <label className={`text-[#303030] font-['Montserrat'] leading-6 ${selectedCategories.includes(category.title) && "font-bold"}`} htmlFor={category.title}>{category.title}</label>
+                                <label
+                                    className={`text-[#303030] font-['Montserrat'] leading-6 ${(selectedCategories.includes(category.title) || (reduxCategory !== "" && reduxCategory === category.title)) && "font-bold"} ${isFromNavbar && reduxCategory !== category.title && "text-gray-300"}`}
+                                    htmlFor={category.title}
+                                >{category.title}</label>
                             </li>
                         ))}
                     </ul>
@@ -307,7 +340,7 @@ const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selec
             </div>
 
             <div className="flex items-center justify-between xl:hidden">
-                <div class="text-[22px] sm:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Products</div>
+                <div className="text-[22px] sm:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Products</div>
 
                 {/* Filter Opening Part for Mobile */}
                 <div
@@ -363,9 +396,15 @@ const ProductsListLeftSide = ({ selectedCategories, setSelectedCategories, selec
                             <ul className="flex flex-col gap-3 border-b border-[#CFCFCF] pb-5">
                                 {categories.map((category) => (
                                     <li key={category.id} className="flex items-center gap-2">
-                                        <input value={category.title} checked={selectedCategories.includes(category.title) || null} onChange={() => handleCategoryChange(category.title)} type="checkbox" id={`mobile-${category.title}`} />
+                                        <input
+                                            value={category.title}
+                                            checked={selectedCategories.includes(category.title) || (reduxCategory !== "" && reduxCategory === category.title)} onChange={() => handleCategoryChange(category.title)}
+                                            disabled={isFromNavbar && reduxCategory !== category.title} type="checkbox"
+                                            id={`mobile-${category.title}`}
+                                        />
+
                                         <label
-                                            className={`text-[#303030] font-['Montserrat'] leading-6 ${selectedCategories.includes(category.title) && "font-bold"}`}
+                                            className={`text-[#303030] font-['Montserrat'] leading-6 ${(selectedCategories.includes(category.title) || (reduxCategory !== "" && reduxCategory === category.title)) && "font-bold"} ${isFromNavbar && reduxCategory !== category.title && "text-gray-300"}`}
                                             htmlFor={`mobile-${category.title}`}
                                         >
                                             {category.title}

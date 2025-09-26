@@ -73,7 +73,7 @@ const BillingForm = ({ formData, setFormData, errors, selectedCountry, setSelect
                         className="py-4 sm:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] max-w-[400px] sm:w-[550px] sm:max-w-[550px] md:w-[640px] md:max-w-[640px] xl:w-[424px] xl:max-w-[424px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] sm:text-xl leading-[30px]"
                         type="text"
                         id="number"
-                        placeholder="+XX (XXX) XXX-XXXX"
+                        placeholder="+X (XXX) XXX-XXXX"
                         value={formData.number}
                         onChange={handleChange}
                     />

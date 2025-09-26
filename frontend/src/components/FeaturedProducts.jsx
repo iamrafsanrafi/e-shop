@@ -215,7 +215,7 @@ const FeaturedProducts = () => {
                 </div>
 
                 {(!loading && featuredProducts.length > 0) ? (
-                    <Slider {...settings} className="mt-12 sm:px-9 max-w-[285px] mx-auto sm:max-w-[650px]  xl:max-w-[1230px] 2xl:min-w-full">
+                    <Slider {...settings} className="mt-12 sm:px-9 max-w-[285px] mx-auto sm:max-w-[650px] lg:max-w-[940px] xl:max-w-[1230px] 2xl:min-w-full">
                         {
                             featuredProducts.map(p => (
                                 <div className="flex items-center justify-center" key={p.id}>
