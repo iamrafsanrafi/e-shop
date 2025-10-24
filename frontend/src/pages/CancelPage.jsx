@@ -30,7 +30,7 @@ const CancelPage = () => {
         </div>
 
         <h1 className="text-2xl font-bold text-[#303030] mt-6">
-          Payment Cancelled ❌
+          Payment Cancelled
         </h1>
         <p className="text-gray-600 mt-2">
           Your payment was not completed. Please try again or use another
@@ -39,7 +39,7 @@ const CancelPage = () => {
 
         <Link
           to="/"
-          className="inline-block mt-6 bg-[#FF624C] text-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+          className="inline-block mt-6 bg-[#FF624C] text-white px-6 py-3 rounded-xl shadow-md transition-transform duration-300"
         >
           Back to Home
         </Link>

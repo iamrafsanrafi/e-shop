@@ -25,12 +25,13 @@ function SampleNextArrow(props) {
                 background: "#FFF",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "72px",
-                height: "72px",
+                width: "60px",
+                height: "60px",
                 border: "1px solid #303030",
                 borderRadius: "50%",
                 right: "0px",
-                zIndex: 10
+                zIndex: 10,
+                transform: window.innerWidth >= 1300 ? "translateX(50%)" : ""
             }}
             className={className}
             onClick={onClick}
@@ -52,12 +53,13 @@ function SampleNextArrowMobile(props) {
                 background: "#FFF",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "56px",
-                height: "56px",
+                width: window.innerWidth >= 640 ? "50px" : "44px",
+                height: window.innerWidth >= 640 ? "50px" : "44px",
                 border: "1px solid #303030",
                 borderRadius: "50%",
                 right: "0px",
-                zIndex: 10
+                zIndex: 10,
+                transform: window.innerWidth >= 800 ? "translateX(50%)" : ""
             }}
             className={className}
             onClick={onClick}
@@ -74,14 +76,32 @@ const SpringSale = () => {
     const [loading, setLoading] = useState(false);
     const localStorageProducts = JSON.parse(localStorage.getItem("springSaleProducts")) || [];
 
+    function getSaleEndDate() {
+        const saleEndDate = localStorage.getItem("saleEndDate");
+        
+        if(saleEndDate) {
+            return new Date(saleEndDate);
+        }
+        
+        const newSaleEndDate = new Date("September 12, 2025 3:11 AM +0600");
+        localStorage.setItem("saleEndDate", newSaleEndDate.toISOString());
+
+        return newSaleEndDate;
+    }
+
     function calculateTimeLeft() {
-        const saleEndDate = new Date("September 18, 2025 12:00 PM +0600");
-        const currentDate = new Date().getTime();
+        const saleEndDate = getSaleEndDate();
+        const currentDate = new Date();
         let difference = saleEndDate - currentDate;
 
         if (difference <= 0) {
-            saleEndDate.setDate(saleEndDate.getDate() + 10);
+            const daysPassedAway = Math.ceil(Math.abs(difference) / 86400000);
+            const timePeriods = Math.ceil(daysPassedAway / 20);
+
+            saleEndDate.setDate(saleEndDate.getDate() + (timePeriods * 20));
             difference = saleEndDate - currentDate;
+
+            localStorage.setItem("saleEndDate", saleEndDate.toISOString());
         }
 
         return {
@@ -119,7 +139,7 @@ const SpringSale = () => {
         else {
             dispatch(setSpringSaleProducts(localStorageProducts));
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -127,7 +147,7 @@ const SpringSale = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [])
+    }, []);
 
     var settings = {
         dots: false,
@@ -135,35 +155,34 @@ const SpringSale = () => {
         speed: 700,
         slidesToShow: 2,
         slidesToScroll: 1,
-        // autoplay: true,
         autoplaySpeed: 2000,
         cssEase: "linear",
         prevArrow: <></>,
         nextArrow: <SampleNextArrow />,
         responsive: [
             {
-                breakpoint: 640,
+                breakpoint: 639,
                 settings: {
                     slidesToShow: 1,
                     nextArrow: <SampleNextArrowMobile />
                 }
             },
             {
-                breakpoint: 768,
+                breakpoint: 767,
                 settings: {
                     slidesToShow: 1,
                     nextArrow: <SampleNextArrowMobile />
                 }
             },
             {
-                breakpoint: 1024,
+                breakpoint: 1023,
                 settings: {
                     slidesToShow: 2,
                     nextArrow: <SampleNextArrowMobile />
                 }
             },
             {
-                breakpoint: 1280,
+                breakpoint: 1279,
                 settings: {
                     slidesToShow: 1,
                     nextArrow: <SampleNextArrowMobile />
@@ -176,44 +195,41 @@ const SpringSale = () => {
     return (
         <section id="spring-sale" className="mb-20 py-16 sm:px-8 2xl:px-0" style={{ background: "url('/images/spring-sale-bg.png')" }}>
             <Container>
-                <div className="flex flex-col lg:flex-row lg:justify-center lg:gap-x-6 xl:gap-x-3 lg:items-center">
+                <div className="flex flex-col lg:flex-row lg:justify-center items-center lg:gap-x-10 xl:gap-x-5 2xl:gap-x-20 gap-y-10 md:gap-y-20 lg:gap-y-0">
                     {/* ---- Timer ---- */}
                     <div className="relative">
-                        <h2 className="text-[#303030] text-[35px] sm:text-[42px] md:text-[56px] font-semibold font-['Poppins'] leading-[68px]">Spring Sale</h2>
+                        <h2 className="text-[#303030] text-center lg:text-left text-[32px] sm:text-[40px] md:text-[56px] font-semibold font-['Poppins'] leading-none md:leading-[68px]">Spring Sale</h2>
 
-                        <div className="flex items-center justify-between sm:justify-start sm:gap-6 mt-5 mb-12 md:mt-10 md:mb-[72px]">
+                        <div className="flex items-center justify-center lg:justify-start gap-5 sm:gap-6 mt-5 md:mt-10 lg:mt-5 2xl:mt-10">
                             <div className="flex flex-col items-center">
-                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">{timerLeft.days < 10 ? "0" : ""}{timerLeft.days}</span>
+                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">{timerLeft.days < 10 ? "0" : ""}{timerLeft.days}</span>
                                 <span className="text-[#303030] font-['Montserrat'] leading-6 text-sm sm:text-base">Days</span>
                             </div>
 
-                            <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">:</span>
+                            <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">:</span>
 
                             <div className="flex flex-col items-center">
-                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">{timerLeft.hours < 10 ? "0" : ""}{timerLeft.hours}</span>
+                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">{timerLeft.hours < 10 ? "0" : ""}{timerLeft.hours}</span>
                                 <span className="text-[#303030] font-['Montserrat'] leading-6 text-sm sm:text-base">Hours</span>
                             </div>
 
-                            <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">:</span>
+                            <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">:</span>
 
                             <div className="flex flex-col items-center">
-                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">{timerLeft.minutes < 10 ? "0" : ""}{timerLeft.minutes}</span>
+                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">{timerLeft.minutes < 10 ? "0" : ""}{timerLeft.minutes}</span>
                                 <span className="text-[#303030] font-['Montserrat'] leading-6 text-sm sm:text-base">Minutes</span>
                             </div>
 
-                            <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">:</span>
+                            <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">:</span>
 
                             <div className="flex flex-col items-center">
-                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-4xl font-semibold leading-[46px]">{timerLeft.seconds < 10 ? "0" : ""}{timerLeft.seconds}</span>
+                                <span className="font-['Poppins'] text-[#FF624C] text-[22px] sm:text-3xl font-semibold leading-[46px]">{timerLeft.seconds < 10 ? "0" : ""}{timerLeft.seconds}</span>
                                 <span className="text-[#303030] font-['Montserrat'] leading-6 text-sm sm:text-base">Seconds</span>
                             </div>
                         </div>
 
-                        <Link to="/products-list">
-                            <Button value="Shop Now" />
-                        </Link>
-
-                        <div className="absolute bottom-[-210px] left-0">
+                        {/* Dots image */}
+                        <div className="absolute bottom-[-210px] left-0 hidden xl:block">
                             <img src="/images/spring-sale-dots.png" alt="background dots" />
                         </div>
                     </div>
@@ -221,7 +237,7 @@ const SpringSale = () => {
                     {/* ---- Slider ---- */}
                     <div>
                         {(!loading && springSaleProducts.length > 0) ? (
-                            <Slider {...settings} className="mt-12 max-w-[490px] md:min-w-full xl:max-w-[830px] 2xl:max-w-[960px]">
+                            <Slider {...settings} className="max-w-[340px] sm:max-w-[400px] md:max-w-[750px] lg:max-w-[464px] xl:max-w-[830px] 2xl:max-w-[920px]">
                                 {springSaleProducts.map(p => (
                                     <ProductLayout2 key={p.id} title={p.title} images={p.images} type={p.type} discountTag={p.discountTag} discountPercent={p.discountTag ? p.discountPercent : ""} rating={p.rating} totalRatings={p.totalRatings} price={p.price} previousPrice={p.discountTag ? p.previousPrice : ""} stock={p.stock} tags={p.tags} id={p.id} />
                                 ))}

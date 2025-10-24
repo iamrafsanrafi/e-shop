@@ -8,30 +8,27 @@ import { getProducts } from "../firebase/firestoreService";
 import { setAllProducts } from "../slices/productsSlice";
 import LoadingSpinner from "./LoadingSpinner";
 
-const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
+const ProductsListProducts = ({ selectedCategories, selectedBrands, showInStock, sortByCategories, setSortByCategories}) => {
     // States
     const [currentPage, setCurrentPage] = useState(1);
-    const [sortByCategories, setSortByCategories] = useState("None");
-    const [sortByPrice, setSortByPrice] = useState("None");
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-    const [isPriceOpen, setIsPriceOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     // Redux states
     const allProducts = useSelector((state) => state.products.allProducts);
     const { minValue, maxValue } = useSelector((state) => state.products);
-    const {category} = useSelector(state => state.products);
+    const { category } = useSelector(state => state.products);
 
     // LocalStorage
     const localStorageProducts = JSON.parse(localStorage.getItem("allProducts")) || [];
 
     // Extra hooks
     const categoriesDropdownRef = useRef(null);
-    const priceDropdownRef = useRef(null);
     const dispatch = useDispatch();
 
-    const itemsPerPage = 16;
+    const itemsPerPage = 18;
 
+    // Functions
     const fetchProducts = async () => {
         setLoading(true);
 
@@ -51,9 +48,8 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
         let products = [...allProducts];
 
         // Checking if specific category is present by navbar options and getting the products
-        if(category) {
+        if (category) {
             products = products.filter(p => p.category === category);
-            console.log(products);
         }
 
         // Sidebar categories
@@ -66,8 +62,14 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
             products = products.filter(p => selectedBrands.includes(p.brand));
         }
 
+        // Sidebar avaiability
+        if(showInStock) {
+            products = products.filter(p => p.stock > 0);
+            console.log(" I am here because of showInStock")
+        }
+
         // Price filter
-        if (minValue && maxValue) {
+        if (minValue >= 0 && maxValue >= 0) {
             products = products.filter(
                 (p) =>
                     parseInt(p.price) >= parseInt(minValue) &&
@@ -75,29 +77,13 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
             );
         }
 
-        // Category-based sorting
+        // Sorting based on different criterias
         if (sortByCategories && sortByCategories !== "None") {
             products.sort((a, b) => {
                 switch (sortByCategories) {
-                    case "Popularity":
-                        return (b.totalRatings || 0) - (a.totalRatings || 0);
-                    case "Rating":
-                        return (b.rating || 0) - (a.rating || 0);
-                    case "Availability":
-                        return (b.stock || 0) - (a.stock || 0);
-                    default:
-                        return 0;
-                }
-            });
-        }
-
-        // Price-based sorting
-        if (sortByPrice && sortByPrice !== "None") {
-            products.sort((a, b) => {
-                switch (sortByPrice) {
-                    case "Price Low-to-High":
+                    case "Price: Low to High":
                         return (a.price || 0) - (b.price || 0);
-                    case "Price High-to-Low":
+                    case "Price: High to Low":
                         return (b.price || 0) - (a.price || 0);
                     default:
                         return 0;
@@ -109,13 +95,30 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
     }, [
         allProducts,
         sortByCategories,
-        sortByPrice,
         selectedCategories,
         selectedBrands,
+        showInStock,
         minValue,
         maxValue,
         category
     ]);
+    
+    const goToTop = () => {
+        const timeout = setTimeout(() => {
+            window.scroll({
+                top: 0,
+                behavior: "smooth"
+            });
+
+            clearTimeout(timeout);
+        }, 150);
+    }
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+
+        goToTop();
+    }
 
     const totalItems = filteredProducts.length;
     const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
@@ -155,18 +158,8 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
             }
         };
 
-        const handleClosePriceDropdown = (e) => {
-            if (
-                priceDropdownRef.current &&
-                !priceDropdownRef.current.contains(e.target)
-            ) {
-                setIsPriceOpen(false);
-            }
-        };
-
         const handleDocClick = (e) => {
             handleCloseCategoriesDropdown(e);
-            handleClosePriceDropdown(e);
         };
 
         document.addEventListener("mousedown", handleDocClick);
@@ -180,39 +173,37 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
             </h2>
 
             {/* ----Sorting Dropdowns---- */}
-            <div className="flex flex-col md:flex-row gap-y-5 md:gap-y-0 mb-6 md:mb-0 justify-between items-center">
-                <p className="text-[#303030] font-['Montserrat'] leading-6 text-sm sm:text-base">
+            <div className="flex flex-col sm:flex-row gap-y-5 md:gap-y-0 mb-6 md:mb-0 justify-between items-center">
+                <p className="text-[#303030] font-['Montserrat'] leading-6 text-sm sm:text-lg">
                     Showing {totalItems > 0 ? startIndex + 1 : 0} - {endIndex} of{" "}
                     {totalItems}
                 </p>
 
                 <div className="flex items-center">
-                    <span className="hidden md:inline text-[#303030] font-['Montserrat'] leading-6 mr-4">
+                    <span className="md:inline text-[#303030] font-['Montserrat'] leading-6 mr-4">
                         Sort by
                     </span>
 
-                    <div className="flex gap-[45px] lg:pr-5">
+                    <div className="flex gap-[45px]">
                         {/* ----Categories Dropdown---- */}
                         <div
-                            className="relative after:content-[''] after:absolute after:w-[1px] after:h-[32px] after:bg-[#CBCBCB] after:top-1/2 after:-right-6 after:-translate-y-1/2"
                             ref={categoriesDropdownRef}
                         >
                             <div
-                                className="w-[120px] sm:w-[150px] flex justify-between items-center cursor-pointer"
+                                className="w-[160px] sm:w-[180px] flex justify-between items-center cursor-pointer"
                                 onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
                             >
                                 <span className="text-[#FF624C] font-['Montserrat'] font-bold text-sm sm:text-base">
                                     {sortByCategories}
                                 </span>
                                 <TfiAngleDown
-                                    className={`text-[#303030] text-sm transition-transform ${isCategoriesOpen ? "rotate-180" : ""
-                                        }`}
+                                    className={`text-black text-sm transition-transform ${isCategoriesOpen ? "rotate-180" : ""}`}
                                 />
                             </div>
 
                             {isCategoriesOpen && (
-                                <ul className="absolute w-[120px] sm:w-[150px] border border-gray-300 bg-white shadow-lg z-10 mt-1">
-                                    {["None", "Popularity", "Rating", "Availability"].map(
+                                <ul className="absolute w-[160px] sm:w-[180px] border border-gray-300 bg-white shadow-lg z-10 mt-1">
+                                    {["None", "Price: Low to High", "Price: High to Low"].map(
                                         (option) => (
                                             <li
                                                 key={option}
@@ -228,48 +219,6 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
                                     )}
                                 </ul>
                             )}
-                        </div>
-
-                        {/* ----Price Dropdown---- */}
-                        <div
-                            className="relative after:content-[''] after:absolute 2xl:after:w-[1px] sm:after:h-[32px] after:bg-[#CBCBCB] after:top-1/2 after:-right-6 after:-translate-y-1/2"
-                            ref={priceDropdownRef}
-                        >
-                            <div
-                                className="w-[160px] sm:w-[216px] flex justify-between items-center cursor-pointer"
-                                onClick={() => setIsPriceOpen(!isPriceOpen)}
-                            >
-                                <span className="text-[#FF624C] font-['Montserrat'] font-bold text-sm sm:text-base">
-                                    {sortByPrice}
-                                </span>
-                                <TfiAngleDown
-                                    className={`text-[#303030] text-sm transition-transform ${isPriceOpen ? "rotate-180" : ""
-                                        }`}
-                                />
-                            </div>
-
-                            {isPriceOpen && (
-                                <ul className="absolute w-[160px] sm:w-[216px] border border-gray-300 bg-white shadow-lg z-10 mt-1">
-                                    {["None", "Price Low-to-High", "Price High-to-Low"].map(
-                                        (option) => (
-                                            <li
-                                                key={option}
-                                                className="p-2 hover:bg-gray-200 cursor-pointer"
-                                                onClick={() => {
-                                                    setSortByPrice(option);
-                                                    setIsPriceOpen(false);
-                                                }}
-                                            >
-                                                <span className="text-black">{option}</span>
-                                            </li>
-                                        )
-                                    )}
-                                </ul>
-                            )}
-                        </div>
-
-                        <div className="hidden 2xl:block">
-                            <MenuIcon />
                         </div>
                     </div>
                 </div>
@@ -294,8 +243,10 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
                             id={p.id}
                         />
                     ))
+                ) : (loading && currentItems.length === 0) ? (
+                    <LoadingSpinner message="Loading Products" />
                 ) : (
-                    <p className="text-2xl text-[#FF624C]">No products found!</p>
+                    <p className="text-xl font-['Montserrat'] my-5 text-[#FF624C] sm:text-[22px] md:text-2xl">No products found!</p>
                 )}
             </div>
 
@@ -305,7 +256,7 @@ const ProductsListProducts = ({ selectedCategories, selectedBrands }) => {
                     totalItems={totalItems}
                     itemsPerPage={itemsPerPage}
                     currentPage={currentPage}
-                    onPageChange={setCurrentPage}
+                    onPageChange={handlePageChange}
                 />
             )}
         </div>

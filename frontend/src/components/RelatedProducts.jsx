@@ -77,34 +77,32 @@ const RelatedProducts = ({ category }) => {
 
     return (
         <div className="mb-20">
-            <Container>
-                <div className="flex items-center justify-between">
-                    <h2 className="text-[22px] sm:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Related Products</h2>
-                    <Link to="/products-list" className="flex items-center text-[13px] sm:text-base text-[#FF624C] font-['Montserrat'] font-bold leading-6 gap-4 cursor-pointer">View All <LongArrowIcon /></Link>
-                </div>
-                <div className="mt-10 sm:mt-12 flex items-start justify-center flex-wrap gap-y-5 lg:gap-y-3 sm:gap-x-3">
-                    {
-                        (!loading && relatedProducts.length > 0) ? <>
-                            {relatedProducts.slice(0, limit).map(p => (
-                                <ProductLayout key={p.id} title={p.title} images={p.images} type={p.type} discountTag={p.discountTag} discountPercent={p.discountTag ? p.discountPercent : ""} rating={p.rating} totalRatings={p.totalRatings} price={p.price} previousPrice={p.discountTag ? p.previousPrice : ""} tags={p.tags} id={p.id} />
-                            ))}
-                        </>
-                            : <LoadingSpinner />
-                    }
-                </div>
-
+            <div className="flex items-center justify-between">
+                <h2 className="text-[22px] sm:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Related Products</h2>
+                <Link to="/products" className="flex items-center text-[13px] sm:text-base text-[#FF624C] font-['Montserrat'] font-bold leading-6 gap-4 cursor-pointer">View All <LongArrowIcon /></Link>
+            </div>
+            <div className="mt-10 sm:mt-12 flex items-start justify-center flex-wrap gap-3   lg:gap-y-3 sm:gap-x-3">
                 {
-                    showLoading && <LoadingSpinner message="Loading..." />
+                    (!loading && relatedProducts.length > 0) ? <>
+                        {relatedProducts.slice(0, limit).map(p => (
+                            <ProductLayout key={p.id} title={p.title} images={p.images} type={p.type} discountTag={p.discountTag} discountPercent={p.discountTag ? p.discountPercent : ""} rating={p.rating} totalRatings={p.totalRatings} price={p.price} previousPrice={p.discountTag ? p.previousPrice : ""} tags={p.tags} id={p.id} />
+                        ))}
+                    </>
+                        : <LoadingSpinner />
                 }
+            </div>
 
-                {
-                    (limit < relatedProducts.length && !loading) ? (
-                        <div className="flex justify-center mt-16">
-                            <Button handleLoadMore={handleLoadMore} value="Load More" bg="white" color="#FF624C" border={true} />
-                        </div>
-                    ) : null
-                }
-            </Container>
+            {
+                showLoading && <LoadingSpinner message="Loading..." />
+            }
+
+            {
+                (limit < relatedProducts.length && !loading) ? (
+                    <div className="flex justify-center mt-16">
+                        <Button handleLoadMore={handleLoadMore} value="Load More" bg="white" color="#FF624C" border={true} />
+                    </div>
+                ) : null
+            }
         </div>
     );
 };

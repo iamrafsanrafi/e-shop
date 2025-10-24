@@ -5,7 +5,6 @@ import Facilities from "../components/Facilities";
 import FaqSection from "../components/faq/FaqSection";
 import FeaturedProducts from "../components/FeaturedProducts";
 import NewProducts from "../components/NewProducts";
-import OfferSection from "../components/OfferSection";
 import SpringSale from "../components/SpringSale";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,7 +53,6 @@ const HomePage = () => {
             <Banner />
             <Facilities />
             <FeaturedProducts />
-            <OfferSection />
             <NewProducts />
             <SpringSale />
             <BestSeller />

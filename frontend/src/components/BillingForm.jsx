@@ -10,28 +10,7 @@ const BillingForm = ({ formData, setFormData, errors, selectedCountry, setSelect
         setFormData({ ...formData, [id]: value });
     };
 
-    const countries = {
-        Bangladesh: {
-            Dhaka: ["Dhaka", "Gazipur", "Narayanganj"],
-            Chittagong: ["Chittagong", "Cox's Bazar", "Comilla"]
-        },
-        India: {
-            Delhi: ["New Delhi", "Gurgaon", "Noida"],
-            Maharashtra: ["Mumbai", "Pune", "Nagpur"]
-        },
-        USA: {
-            California: ["Los Angeles", "San Francisco", "San Diego"],
-            Texas: ["Houston", "Dallas", "Austin"]
-        },
-        UK: {
-            England: ["London", "Manchester", "Liverpool"],
-            Scotland: ["Edinburgh", "Glasgow", "Aberdeen"]
-        },
-        Canada: {
-            Ontario: ["Toronto", "Ottawa", "Hamilton"],
-            BritishColumbia: ["Vancouver", "Victoria", "Kelowna"]
-        }
-    };
+    const countries = ["Bangladesh", "India", "USA", "UK", "Canada"];
 
     return (
         <form>
@@ -45,7 +24,7 @@ const BillingForm = ({ formData, setFormData, errors, selectedCountry, setSelect
                         className="py-4 sm:py-5 md:py-[25px] px-6 sm:px-7 md:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] sm:w-[550px] sm:max-w-[550px] md:w-[640px] md:max-w-[640px] xl:w-[424px] xl:max-w-[424px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] sm:text-xl leading-[30px]"
                         type="text"
                         id="firstname"
-                        placeholder="Amelia Robert"
+                        placeholder="Rafsan"
                         value={formData.firstname}
                         onChange={handleChange}
                     />
@@ -59,7 +38,7 @@ const BillingForm = ({ formData, setFormData, errors, selectedCountry, setSelect
                         className="py-4 sm:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] max-w-[400px] sm:w-[550px] sm:max-w-[550px] md:w-[640px] md:max-w-[640px] xl:w-[424px] xl:max-w-[424px] text-[#303030] placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] sm:text-xl leading-[30px]"
                         type="text"
                         id="lastname"
-                        placeholder="Watson"
+                        placeholder="Rafi"
                         value={formData.lastname}
                         onChange={handleChange}
                     />
@@ -119,8 +98,8 @@ const BillingForm = ({ formData, setFormData, errors, selectedCountry, setSelect
                             className="appearance-none py-4 sm:py-[25px] px-6 sm:px-[32px] outline-none border border-[#CBCBCB] rounded-[10px] w-[360px] max-w-[400px] sm:w-[550px] sm:max-w-[550px] md:w-[640px] md:max-w-[640px] xl:w-[424px] xl:max-w-[424px] text-[#303030] font-['Montserrat'] sm:text-xl leading-[30px]"
                         >
                             <option value="">Select a country</option>
-                            {Object.keys(countries).map(country => (
-                                <option key={country} value={country}>{country}</option>
+                            {countries.map((country, index) => (
+                                <option key={index} value={country}>{country}</option>
                             ))}
                         </select>
                         <TfiAngleDown className="text-xl text-[#303030] pointer-events-none absolute top-1/2 -translate-y-1/2 right-[28px]" />

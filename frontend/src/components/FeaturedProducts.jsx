@@ -164,7 +164,7 @@ const FeaturedProducts = () => {
         prevArrow: <SamplePrevArrow />,
         responsive: [
             {
-                breakpoint: 640,
+                breakpoint: 639,
                 settings: {
                     slidesToShow: 1,
                     nextArrow: <SampleNextArrowMobile />,
@@ -209,10 +209,7 @@ const FeaturedProducts = () => {
     return (
         <div className="mb-20 sm:px-5 2xl:px-0">
             <Container>
-                <div className="flex justify-between items-center">
-                    <h2 className="text-[22px] sm:text-3xl md:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Featured Products</h2>
-                    <Link to="/products-list" className="flex items-center text-[13px] sm:text-base text-[#FF624C] font-['Montserrat'] font-bold leading-6 gap-4">View All <LongArrowIcon width="25px" /></Link>
-                </div>
+                <h2 className="text-[22px] text-center sm:text-left sm:text-3xl md:text-4xl text-[#303030] font-['Poppins'] leading-[46px] font-semibold">Featured Products</h2>
 
                 {(!loading && featuredProducts.length > 0) ? (
                     <Slider {...settings} className="mt-12 sm:px-9 max-w-[285px] mx-auto sm:max-w-[650px] lg:max-w-[940px] xl:max-w-[1230px] 2xl:min-w-full">

@@ -4,7 +4,6 @@ import HomePage from "./pages/HomePage"
 import ProductsListPage from "./pages/ProductsListPage"
 import ProductDetailsPage from "./pages/ProductDetailsPage"
 import CheckoutPage from "./pages/CheckoutPage"
-import BlogPage from "./pages/BlogPage"
 import ContactPage from "./pages/ContactPage"
 import CartPage from "./pages/CartPage";
 import LoginPage from "./pages/LoginPage";
@@ -61,10 +60,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/products-list" element={<ProductsListPage />} />
+          <Route path="/products" element={<ProductsListPage />} />
           <Route path="/product-details/:id" element={<ProductDetailsPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -72,6 +70,7 @@ const App = () => {
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/cancel" element={<CancelPage />} />
         </Route>
+
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
         </Route>

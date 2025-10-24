@@ -5,18 +5,37 @@ import Container from "../commonLayouts/Container";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { IoIosMail } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
-
-const categories = [
-    { name: "Computers & Tablets", url: "/products-list?q=Computers & Tablets" },
-    { name: "Mobile & Accessories", url: "/products-list?q=Mobiles & Accessories" },
-    { name: "TV & Home Theater", url: "/products-list?q=TV & Home Theater" },
-    { name: "Audio & Headphones", url: "/products-list?q=Audio & Headphones" },
-    { name: "Cameras & Camcorders", url: "/products-list?q=Cameras & Camcorders" },
-    { name: "Gaming Equipment", url: "/products-list?q=Gaming Equipment" },
-    { name: "Home Appliances", url: "/products-list?q=Home Appliances" }
-];
+import { useState } from "react";
+import { toast } from "react-toastify"
+import LoadingSpinner from "../LoadingSpinner";
 
 const Footer = () => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+    // States
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    // Function
+    const handleSubmitEmail = () => {
+        setLoading(true);
+
+        if (!email || email.trim() === "") {
+            setLoading(false);
+            return toast.error("Email is required!");
+        }
+        else if (!emailRegex.test(email)) {
+            setLoading(false);
+            return toast.error("Invalid email!");
+        }
+
+        setTimeout(() => {
+            toast.success("Subscribed successfully!");
+            setEmail("");
+            setLoading(false);
+        }, 250);
+    }
+
     return (
         <Container>
             <footer>
@@ -25,33 +44,35 @@ const Footer = () => {
                     <div className="bg-[linear-gradient(90deg,_rgba(244,244,244,1)_28%,_rgba(217,217,217,1)_45%)] sm:h-[531px] rounded-[25px] p-8 sm:pt-[114px] sm:pl-[70px] md:pl-[100px]">
                         <h3 className="text-[#303030] text-3xl sm:text-4xl leading-[46px] font-semibold font-['Poppins']">Get Our Updates</h3>
                         <p className="sm:max-w-[514px] text-[#303030] text-sm sm:text-xl leading-[30px] font-['Montserrat'] mt-4">
-                            Browse our wide selection of electronics and
-                            find the perfect promo for you from newsletter.
+                            Browse our wide selection of electronics and find the perfect promo for you from the newsletter.
                         </p>
 
                         <input
-                            className="placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] text-sm sm:text-base leading-6 border border-[#929292] outline-none rounded-[10px] py-3 pl-3 sm:py-6 sm:pl-6 w-full sm:w-[470px] mt-8 mb-4"
-                            type="text"
-                            placeholder="Enter your email address ..."
+                            className="placeholder:text-[#303030] placeholder:opacity-75 font-['Montserrat'] text-sm sm:text-base leading-6 border border-[#929292] outline-none rounded-[10px] py-3 pl-3 sm:py-[21px] sm:pl-6 w-full sm:w-[470px] mt-8 mb-4"
+                            type="email"
+                            placeholder="Enter your email address..."
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <br />
 
                         <div className="sm:hidden">
-                            <Button value="Subscribe" paddingY="12px" paddingX="12px" />
+                            <Button value={loading ? <LoadingSpinner /> : "Subscribe"} paddingY="8px" paddingX="12px" handleSubmit={handleSubmitEmail} width="106px" />
                         </div>
                         <div className="hidden sm:block">
-                            <Button value="Subscribe" />
+                            <Button value={loading ? <LoadingSpinner /> : "Subscribe"} handleSubmit={handleSubmitEmail} width="184px" />
                         </div>
                     </div>
                 </div>
 
                 {/* ----Actual Footer---- */}
-                <div className="mt-[100px] flex flex-col pl-5 pr-5 gap-y-6 lg:items-start md:flex-row md:flex-wrap md:justify-between pb-10 sm:pb-20">
-                    <div className="md:w-[349px] w-full">
+                <div className="mt-[100px] flex flex-col pl-5 pr-5 gap-y-[50px] lg:items-start lg:flex-row lg:justify-between pb-10 sm:pb-20">
+                    {/* ---- First Half ---- */}
+                    <div className="md:w-[270px] w-full">
                         <div>
                             <img src={logo} alt="logo" />
                         </div>
-                        <ul className="flex flex-col gap-3 mt-[30px] lg:mt-[158px]">
+                        <ul className="flex flex-col gap-3 mt-6">
                             <li className="relative">
                                 <BsFillTelephoneFill className="text-[#303030] opacity-[75%] text-sm sm:text-base" />
                                 <Link
@@ -74,7 +95,7 @@ const Footer = () => {
                                 <FaLocationDot className="text-[#303030] text-sm sm:text-base opacity-[75%]" />
                                 <Link
                                     className="absolute top-1/2 -translate-y-1/2 left-[27px] text-[#303030] text-sm sm:text-base font-['Montserrat'] leading-6"
-                                    to="https://maps.app.goo.gl/DipLafPdoiQoKjnv7"
+                                    to="https://maps.app.goo.gl/SmDB2MKYe5zoWwQz8"
                                     target="_blank"
                                 >
                                     123 Main Street, Anytown USA
@@ -83,48 +104,19 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Links</h4>
-                        <ul className="flex flex-col gap-3 text-[#303030] font-['Montserrat'] leading-6 mt-6">
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Products List</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Order Tracking</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Products Guide</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Shopping Cart</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Tech Blog</Link></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Supports</h4>
-                        <ul className="flex flex-col gap-3 text-[#303030] font-['Montserrat'] leading-6 mt-6">
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">About Us</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Privacy Policy</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Return Policy</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Help Centre</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Store Locations</Link></li>
-                            <li><Link to="#" className="text-sm sm:text-base hover:underline">Careers</Link></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Categories</h4>
-                        <ul className="flex flex-col gap-3 text-[#303030] font-['Montserrat'] leading-6 mt-6">
-                            {
-                                categories.map(c => (
-                                    <li>
-                                        <Link to={c.url} className="text-sm sm:text-base hover:underline">{c.name}</Link>
-                                    </li>
-                                ))   
-                            }
-                        </ul>
-                    </div>
-
-                    <div>
+                    {/* ---- Second Half ---- */}
+                    <div className="flex flex-col lg:items-start lg:flex-row gap-y-[50px] lg:gap-x-20 xl:gap-x-25">
                         <div>
-                            <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Payments</h4>
-                            <img className="mt-6" src="/images/payments.png" alt="payment methods" />
+                            <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Supports</h4>
+
+                            <ul className="flex flex-col gap-3 text-[#303030] font-['Montserrat'] mt-6">
+                                <li className=""><Link to="#" className="text-sm sm:text-base hover:underline ">Return Policy</Link></li>
+                                <li className="leading"><Link to="#" className="text-sm sm:text-base hover:underline ">Help Centre</Link></li>
+                                <li className="leading"><Link to="#" className="text-sm sm:text-base hover:underline ">Careers</Link></li>
+                            </ul>
                         </div>
-                        <div className="mt-8 sm:mt-[74px]">
+
+                        <div>
                             <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Follow Us</h4>
                             <ul className="flex flex-col gap-3 text-[#303030] font-['Montserrat'] leading-6 mt-6">
                                 <li><a href="https://x.com/" target="_blank" className="text-sm sm:text-base hover:underline">Twitter</a></li>
@@ -132,20 +124,25 @@ const Footer = () => {
                                 <li><a href="https://www.facebook.com/" target="_blank" className="text-sm sm:text-base hover:underline">Facebook</a></li>
                             </ul>
                         </div>
+
+                        <div>
+                            <h4 className="text-lg sm:text-xl text-[#303030] font-semibold font-['Poppins'] leading-[30px]">Payments</h4>
+                            <img className="mt-6" src="/images/payments.png" alt="payment methods" />
+                        </div>
                     </div>
                 </div>
 
                 <div className="h-[1px] bg-[#CBCBCB]"></div>
 
-                <div className="text-[#303030] font-['Montserrat'] text-xs sm:text-sm leading-5 flex justify-between mt-2 mb-20 opacity-75 lg:px-4">
-                    <Link className="" to="#">Copyright © 2023 e-shop. All Rights Reserved.</Link>
+                <div className="text-[#303030] font-['Montserrat'] text-xs sm:text-sm leading-5 flex flex-col gap-y-1 items-center mt-2 mb-20 opacity-75 lg:px-4">
+                    <Link to="#">Copyright © 2017-Present, e-shop. All Rights Reserved.</Link>
 
                     <div className="flex gap-2">
-                        <Link>Privacy Policy</Link>
+                        <Link to="#">About Us</Link>
                         <span>|</span>
-                        <Link>Terms & Condition</Link>
+                        <Link to="#">Privacy Policy</Link>
                         <span>|</span>
-                        <Link>Sitemap</Link>
+                        <Link to="#">Terms & Condition</Link>
                     </div>
                 </div>
             </footer>

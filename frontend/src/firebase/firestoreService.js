@@ -35,7 +35,6 @@ export const getProducts = async () => {
 
         const products = snapshot.docs.map(doc => {
             const product = doc.data();
-            console.log(product);
 
             return {
                 ...product,

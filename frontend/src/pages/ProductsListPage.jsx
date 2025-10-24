@@ -4,16 +4,22 @@ import Container from "../components/commonLayouts/Container";
 import ProductsListLeftSide from "../components/ProductsListLeftSide";
 import ProductsListProducts from "../components/ProductsListProducts";
 import { useLocation } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCategory, setFromNavbar } from "../slices/productsSlice";
 
 const ProductsListPage = () => {
+    // States
     const [selectedCategories, setSelectedCategories] = useState("");
     const [selectedBrands, setSelectedBrands] = useState("");
+    const [showInStock, setShowInStock] = useState(false);
+    const [sortByCategories, setSortByCategories] = useState("None");
 
-    // Extra hook
+    // Extra hooks
     const location = useLocation();
     const dispatch = useDispatch();
+
+    // Redux states
+    const reduxCategory = useSelector(state => state.products.category);
 
     // This useEffect is used to scroll back to top and also get the requested specific product category name
     useEffect(() => {
@@ -27,7 +33,7 @@ const ProductsListPage = () => {
             let category = location.search.slice(3, location.search.length);
             category = category.split("%20").join(" ");
 
-            console.log(category);
+            if (category === reduxCategory) return;
 
             // Setting the category on redux state and marking as navbar navigation
             dispatch(setCategory(category));
@@ -41,26 +47,23 @@ const ProductsListPage = () => {
             dispatch(setCategory(""));
             dispatch(setFromNavbar(false));
         }
-    }, [location.search, dispatch]);
 
-
-    // This useEffect for when the user leaves this page
-    useEffect(() => {
         return () => {
             // Clearing states when user leaves the page
             dispatch(setCategory(""));
             dispatch(setFromNavbar(false));
-        };
-    }, [dispatch]);
+        }
+    }, [location.search, dispatch]);
+
 
     return (
         <Container>
-            <div className="flex flex-col xl:items-start xl:flex-row gap-[25px] mt-5 sm:mt-16 mb-20 sm:px-5 xl:px-0">
+            <div className="flex flex-col xl:items-start xl:flex-row gap-[25px] mt-5 sm:mt-16 mb-20 sm:px-5 2xl:px-0">
                 {/* Left Side */}
-                <ProductsListLeftSide selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} selectedBrands={selectedBrands} setSelectedBrands={setSelectedBrands} />
+                <ProductsListLeftSide selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} selectedBrands={selectedBrands} setSelectedBrands={setSelectedBrands} showInStock={showInStock} setShowInStock={setShowInStock} setSortByCategories={setSortByCategories} />
 
                 {/* Right Side */}
-                <ProductsListProducts selectedCategories={selectedCategories} selectedBrands={selectedBrands} />
+                <ProductsListProducts selectedCategories={selectedCategories} selectedBrands={selectedBrands} showInStock={showInStock} sortByCategories={sortByCategories} setSortByCategories={setSortByCategories} />
             </div>
         </Container>
     );

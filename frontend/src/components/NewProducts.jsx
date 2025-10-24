@@ -32,11 +32,10 @@ const NewProducts = () => {
 
     const categories = [
         { id: 1, name: "All Categories", value: "all" },
-        { id: 2, name: "Computers", value: "computer" },
-        { id: 3, name: "Mobiles", value: "mobile" },
-        { id: 4, name: "Tablets", value: "tablet" },
-        { id: 4, name: "Laptops", value: "laptop" },
-        { id: 5, name: "Accessories", value: "accessories" },
+        { id: 2, name: "Mobiles", value: "mobile" },
+        { id: 3, name: "Tablets", value: "tablet" },
+        { id: 4, name: "Computers", value: "computer" },
+        { id: 5, name: "Laptops", value: "laptop" },
     ];
 
 
@@ -61,7 +60,7 @@ const NewProducts = () => {
 
     const fetchProducts = async () => {
         setLoading(true)
-        const q = query(collection(db, "Products"), where("tags", "array-contains", "New"));
+        const q = query(collection(db, "Products"), where("tags", "array-contains", "New"), where("type", "in", ["Desktop", "Computer", "Laptop", "Mobile", "Tablet"]));
         const snapshot = await getDocs(q);
         const data = snapshot.docs.map(doc => {
             const product = doc.data();
@@ -83,7 +82,7 @@ const NewProducts = () => {
 
         switch (selectedCategory.value) {
             case "all":
-                return newProducts;
+                return newProducts; 
             case "computer":
                 return newProducts.filter(p => p.type.toLowerCase() === "computer" || p.type.toLowerCase() === "desktop");
             case "laptop":
@@ -91,11 +90,7 @@ const NewProducts = () => {
             case "mobile":
                 return newProducts.filter(p => p.type.toLowerCase() === "mobile");
             case "tablet":
-                return newProducts.filter(p => p.type.toLowerCase() === "tablet");
-            case "accessories":
-                return newProducts.filter(p => !["desktop", "computer", "laptop", "mobile", "tablet"].includes(p.type.toLowerCase()));
-            default:
-                return newProducts;
+                return newProducts.filter(p => p.type.toLowerCase() === "tablet");                
         }
     }, [newProducts, selectedCategory]);
 
@@ -151,7 +146,7 @@ const NewProducts = () => {
 
                             {/* Country list */}
                             {isDropdownOpen && (
-                                <ul className="absolute w-[125px] sm:w-full border border-gray-300 bg-white shadow-lg z-10">
+                                <ul className="absolute w-full border border-gray-300 bg-white shadow-lg z-10">
                                     {categories.map(category => (
                                         <li className="flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer"
                                             key={category?.id}

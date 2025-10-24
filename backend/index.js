@@ -44,7 +44,7 @@ app.post("/create-checkout-session", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("HELLO")
+    res.send("HELLO");
 })
 
 // Start server

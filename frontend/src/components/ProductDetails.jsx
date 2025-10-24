@@ -1,16 +1,16 @@
 import { IoMdStar } from "react-icons/io";
 
-const ProductDetails = ({product}) => {
-    const {totalRatings, title, price, rating, previousPrice, brand, stock} = product;
-    
+const ProductDetails = ({ product, variant, setVariant }) => {
+    const { totalRatings, title, price, rating, previousPrice, brand, stock } = product;
+
     const formattedRating = parseFloat(rating).toFixed(0);
 
     return (
-        <div className="mt-5 sm:mt-10 md:mt-12 lg:mt-0">
+        <div className="mt-5 sm:mt-10 md:mt-12 xl:mt-0">
             {/* Rating */}
             <div className="flex items-center gap-2">
                 <div className="flex text-[#FED550] text-[25px]">
-                    {Array.from({length: parseInt(formattedRating)}).map((_, index) => (
+                    {Array.from({ length: parseInt(formattedRating) }).map((_, index) => (
                         <IoMdStar key={index} />
                     ))}
                 </div>
@@ -18,7 +18,7 @@ const ProductDetails = ({product}) => {
             </div>
 
             {/* Product Title */}
-            <h2 className="text-[#303030] font-['Poppins'] text-lg sm:text-4xl font-semibold leading-[46px] sm:border-b border-[#CBCBCB] sm:pb-6 sm:w-[630px] mt-1 sm:mt-4">{title}</h2>
+            <h2 className="text-[#303030] font-['Poppins'] text-xl sm:text-3xl md:text-4xl font-semibold leading-[46px] sm:border-b border-[#CBCBCB] sm:pb-6 sm:w-[630px] mt-1 sm:mt-4">{title}</h2>
 
             {/* Price */}
             <p className="flex items-baseline gap-5 mt-1 sm:mt-5 border-b border-[#CBCBCB] sm:pb-6 sm:border-0">
@@ -42,14 +42,37 @@ const ProductDetails = ({product}) => {
                 </p>
                 <div className="flex gap-[20px] sm:gap-[94px]">
                     <span className="text-[#303030] font-['Poppins'] sm:text-xl font-semibold leading-[30px]">Variant</span>
-                    
+
                     <div className="flex flex-wrap gap-x-1 gap-y-2">
-                        <button className="border border-[#979797] rounded-[5px] text-[#303030] font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer hover:bg-[#979797] hover:text-white transition">Off White</button>
-                        <button className="border border-[#FFB0A5] rounded-[5px] text-[#FF624C] font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer hover:bg-[#FFB0A5] hover:text-white transition">Space Gray</button>
-                        <button className="border border-[#979797] rounded-[5px] text-[#303030] font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer hover:bg-[#979797] hover:text-white transition">Jet Black</button>
+                        <button
+                            onClick={() => setVariant(0)}
+                            className={`border border-[#979797] rounded-[5px] text-[#303030] font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer hover:bg-[#979797] hover:text-white transition ${variant === 0 && "bg-[#FF624C] text-white border-[#FF624C] hover:bg-[#FF624C]"}`}
+                        >Off White</button>
+
+                        <button
+                            onClick={() => setVariant(1)}
+                            className={`border border-[#979797] rounded-[5px] text-[#303030] font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer hover:bg-[#979797] hover:text-white transition ${variant === 1 && "bg-[#FF624C] text-white border-[#FF624C] hover:bg-[#FF624C]"}`}
+                        >Space Gray</button>
+
+                        <button
+                            onClick={() => setVariant(2)}
+                            className={`border border-[#979797] rounded-[5px] text-[#303030] font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer hover:bg-[#979797] hover:text-white transition ${variant === 2 && "bg-[#FF624C] text-white border-[#FF624C] hover:bg-[#FF624C]"}`}
+                        >Jet Black</button>
+
                         <button disabled className="border  rounded-[5px]  font-['Montserrat'] leading-[24px] py-4 px-8 font-bold cursor-pointer disabled:text-[#CBCBCB] disabled:border-[#CBCBCB]">Cinnamon Red</button>
                     </div>
                 </div>
+
+                {/* ---- Marquee ---- */}
+                <marquee
+                    className="text-base lg:text-[17px] 2xl:text-lg font-['Poppins'] bg-[#FFF2EF] py-2 rounded-md select-none"
+                    behavior="scroll"
+                    direction="left"
+                    scrollamount="5"
+                >
+                    You may notice that all products share the same variants — that's because I don't have actual product variant data.
+                </marquee>
+
             </div>
         </div>
     );

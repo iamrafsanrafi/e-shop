@@ -4,28 +4,18 @@ import { IoIosMenu } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeMenu } from "../../slices/menuSlice";
-import { clearCategory } from "../../slices/productsSlice";
 import { GoTriangleDown } from "react-icons/go";
 import scrollToSection from "../../utils/scrollToSection";
-
-const categories = [
-    { name: "Computers & Tablets", url: "/products-list?q=Computers & Tablets" },
-    { name: "Mobile & Accessories", url: "/products-list?q=Mobiles & Accessories" },
-    { name: "TV & Home Theater", url: "/products-list?q=TV & Home Theater" },
-    { name: "Audio & Headphones", url: "/products-list?q=Audio & Headphones" },
-    { name: "Cameras & Camcorders", url: "/products-list?q=Cameras & Camcorders" },
-    { name: "Gaming Equipment", url: "/products-list?q=Gaming Equipment" },
-    { name: "Home Appliances", url: "/products-list?q=Home Appliances" }
-];
+import { categories } from "../../constants/data";
 
 const BottomPart = () => {
     // States
     const [isCategoriesDropdownOpen, setIsCategoriesDropdownOpen] = useState(false);
     const [isAllCategoriesOpen, setIsAllCategoriesOpen] = useState(false);
 
-    // Redux state s
+    // Redux states
     const isMenuOpen = useSelector(store => store.menu.showMenu);
-    const { category } = useSelector(state => state.products);
+    const reduxCategory = useSelector(state => state.products.category);
 
     // Extra hooks
     const dispatch = useDispatch();
@@ -53,9 +43,8 @@ const BottomPart = () => {
         });
     }
 
-    const handleCloseDropdownAndClearCategory = () => {
+    const handleCloseCategoriesDropdown = () => {
         setIsCategoriesDropdownOpen(false);
-        dispatch(clearCategory());
     }
 
     useEffect(() => {
@@ -92,7 +81,7 @@ const BottomPart = () => {
             <nav id="bottom-part" className="bg-[#FF624C] py-6 font-['Montserrat'] hidden sm:block sm:px-5 2xl:px-0">
                 <Container>
                     <div className="flex justify-between">
-                        <ul className="flex items-center sm:gap-8 md:gap-10 lg:gap-14 xl:gap-20 text-white font-bold leading-6">
+                        <ul className="flex items-center sm:gap-5 md:gap-10 lg:gap-14 xl:gap-20 text-white font-bold leading-6">
                             <li className="relative" ref={categoriesDropdownRef}>
                                 <button className="flex items-center gap-4 cursor-pointer" to="#" onClick={() => setIsCategoriesDropdownOpen(!isCategoriesDropdownOpen)}>
                                     <IoIosMenu className="text-3xl" />
@@ -105,7 +94,7 @@ const BottomPart = () => {
                                     <div className="absolute top-[80%] left-0 mt-2 w-72 z-50 bg-white rounded-xl shadow-lg border border-gray-100 p-4 space-y-2 font-['Poppins']">
                                         {categories.map(c => (
                                             <Link
-                                                onClick={handleCloseDropdownAndClearCategory}
+                                                onClick={handleCloseCategoriesDropdown}
                                                 key={c.name}
                                                 to={c.url}
                                                 className="block px-4 py-2 rounded-lg text-sm text-[#303030] hover:bg-gray-100 transition duration-150"
@@ -115,27 +104,24 @@ const BottomPart = () => {
                                 )}
                             </li>
                             <li className="relative">
-                                <Link className="flex items-center gap-2 cursor-pointer" to="/products-list">
+                                <Link className="flex items-center gap-2 cursor-pointer" to="/products">
                                     Products
                                 </Link>
-                            </li>
-                            <li>
-                                <Link to="/blog">Blog</Link>
                             </li>
                             <li>
                                 <Link to="/contact">Contact</Link>
                             </li>
                         </ul>
 
-                        <ul className="flex items-center sm:gap-8 md:gap-15 2xl:gap-20 text-white font-bold leading-6">
+                        <ul className="flex items-center sm:gap-5 md:gap-15 2xl:gap-20 text-white font-bold leading-6">
+                            <li className="">
+                                <button className="cursor-pointer" onClick={() => handleScroll("new-arrival")}>New Arrival</button>
+                            </li>
                             <li>
                                 <button className="cursor-pointer" onClick={() => handleScroll("spring-sale")}>LIMITED SALE</button>
                             </li>
                             <li>
                                 <button className="cursor-pointer" onClick={() => handleScroll("best-seller")}>Best Seller</button>
-                            </li>
-                            <li className="hidden xl:block">
-                                <button className="cursor-pointer" onClick={() => handleScroll("new-arrival")}>New Arrival</button>
                             </li>
                         </ul>
                     </div>
@@ -150,12 +136,12 @@ const BottomPart = () => {
                 ></div>
             )}
 
-            {/* Sidebar Menu */}
+            {/* ----Sidebar Menu---- */}
             <div
-                className={`fixed inset-0 w-[75%] max-w-[320px] z-50 bg-white sm:hidden rounded-r-2xl shadow-xl transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+                className={`fixed inset-0 w-[320px] z-50 bg-white sm:hidden rounded-r-2xl shadow-xl transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
                     } transition-transform duration-500 ease-in-out`}
             >
-                {/* Header */}
+                {/* ----Header---- */}
                 <div className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-[#ffffff] to-[#f9f9f9] rounded-tr-2xl border-b border-gray-200">
                     <h2 className="text-2xl font-bold text-[#303030] tracking-wide">Menu</h2>
                     <button
@@ -182,17 +168,17 @@ const BottomPart = () => {
 
                         {/* ----Categories---- */}
                         {isAllCategoriesOpen && (
-                            <div className="pl-9 flex flex-col items-start gap-y-3 mt-1">
+                            <div className="pl-9 flex flex-col items-start gap-y-4 mt-4">
                                 {categories.map((c) => (
                                     <Link
                                         onClick={() => {
-                                            handleCloseDropdownAndClearCategory();
+                                            handleCloseCategoriesDropdown();
                                             setIsAllCategoriesOpen(false);
                                             handleCloseMenu();
                                         }}
                                         key={c.name}
                                         to={c.url}
-                                        className="border-b border-[#CBCBCB] text-[#FF624C]"
+                                        className={`text-base  ${c.name === reduxCategory ? "text-[#FF624C]" : "text-[#303030]"}`}
                                     >
                                         {c.name}
                                     </Link>
@@ -202,8 +188,7 @@ const BottomPart = () => {
                     </li>
 
                     {[
-                        { name: "Products", url: "/products-list" },
-                        { name: "Blog", url: "/blog" },
+                        { name: "Products", url: "/products" },
                         { name: "Contact", url: "/contact" },
                     ].map((item, index) => (
                         <li
@@ -215,7 +200,12 @@ const BottomPart = () => {
                             </Link>
                         </li>
                     ))}
-
+                    
+                    <li className="relative text-lg font-medium text-[#303030] cursor-pointer group transition-colors duration-200">
+                        <button className="cursor-pointer" onClick={() => handleScroll("new-arrival")}>
+                            New Arrival
+                        </button>
+                    </li>
                     <li className="relative text-lg font-medium text-[#303030] cursor-pointer group transition-colors duration-200">
                         <button className="cursor-pointer" onClick={() => handleScroll("spring-sale")}>
                             LIMITED SALE
@@ -224,11 +214,6 @@ const BottomPart = () => {
                     <li className="relative text-lg font-medium text-[#303030] cursor-pointer group transition-colors duration-200">
                         <button className="cursor-pointer" onClick={() => handleScroll("best-seller")}>
                             Best Seller
-                        </button>
-                    </li>
-                    <li className="relative text-lg font-medium text-[#303030] cursor-pointer group transition-colors duration-200">
-                        <button className="cursor-pointer" onClick={() => handleScroll("new-arrival")}>
-                            New Arrival
                         </button>
                     </li>
                 </ul>

@@ -48,9 +48,10 @@ const CartPage = () => {
         
         try {
             await updateUserCart(user.uid, cartProducts || []);
-            toast.success("Cart updated successfully!");
+            toast.success("Cart saved successfully!");
         } catch (err) {
-            toast.error("Failed to update cart. Check console.");
+            toast.error("Failed to update cart.");
+            console.log("ERROR coming from cart page: ", err.message);
         }
         finally {
             setLoading(false);
@@ -61,7 +62,7 @@ const CartPage = () => {
         <div className="sm:px-5 2xl:px-0">
             <Container >
                 <div className="font-['Montserrat'] text-[#303030] text-base leading-6 flex gap-10 mt-5 sm:mt-8 md:mt-12 lg:mt-16">
-                    <Link to="/" className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px]">Home</Link>
+                    <Link to="/" className="relative after:content-[''] after:absolute after:w-[1px] after:h-[20px] after:bg-[#4A4A4A] after:top-1/2 after:-translate-y-1/2 after:right-[-19px] hover:text-[#FF624C] font-medium">Home</Link>
                     <span className="font-bold">Cart</span>
                 </div>
 
@@ -76,31 +77,38 @@ const CartPage = () => {
                 {/* Cart products table */}
                 <table className="w-full border-separate border-spacing-y-4">
                     <tbody>
-                        {cartProducts.map(product => (
+                        {cartProducts.map((product, index) => (
                             <CartProduct
-                                key={product.id}
+                                key={index}
+                                index={index}
                                 id={product.id}
                                 type={product.type}
                                 title={product.title}
                                 images={product.images}
-                                variant={"Black"}
+                                variant={product.variant}
+                                quantity={product.quantity}
                                 price={product.price}
                             />
                         ))}
                     </tbody>
                 </table>
+                
+                <p className="font-['Montserrat'] text-lg">
+                    <em className="font-bold">Important:</em>
+                    <em className="ml-2 text-red-500 font-medium">Your cart items will be cleared when you log out. To save them permanently, click the <span className="font-bold">Save Cart</span> button. And always save the cart after you make any changes.</em>
+                </p>
 
-                <div className="text-right mt-8 mb-8 md:mb-0">
+                <div className="text-right mb-8 lg:mb-0">
                     <div className="lg:hidden flex items-center justify-between">
-                        <p className="font-['Montserrat'] font-bold text-lg">Total Price: ${totalPrice}</p>
-                        <Button handleUpdateCart={handleUpdateCart} value={loading ? <LoadingSpinner /> : "Update Cart"} paddingX="20px" paddingY="10px" minWidth="143px" />
+                        <p className="font-['Montserrat'] font-bold text-base sm:text-lg">Total Price: ${totalPrice}</p>
+                        <Button handleUpdateCart={handleUpdateCart} value={loading ? <LoadingSpinner /> : "Save Cart"} paddingX="20px" paddingY="10px" minWidth="143px" />
                     </div>
                     <div className="hidden lg:block">
-                        <Button handleUpdateCart={handleUpdateCart} value={loading ? <LoadingSpinner /> : "Update Cart"} paddingX="40px" paddingY="16px" width="207px" />
+                        <Button handleUpdateCart={handleUpdateCart} value={loading ? <LoadingSpinner /> : "Save Cart"} paddingX="40px" paddingY="16px" width="207px" />
                     </div>
                 </div>
 
-                <div className="border-t mt-[100px] border-[#CBCBCB] hidden md:block">
+                <div className="border-t mt-[100px] border-[#CBCBCB] hidden lg:block">
                     <Facilities />
                 </div>
             </Container>

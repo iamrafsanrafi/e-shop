@@ -111,7 +111,7 @@ const LoginPage = () => {
                     Welcome Back
                 </h2>
                 <p className="text-[#303030] opacity-75 font-['Montserrat'] text-sm sm:text-base mt-2 text-center">
-                    Please log in to continue
+                    Please login to continue
                 </p>
 
                 {/* ----Login form---- */}

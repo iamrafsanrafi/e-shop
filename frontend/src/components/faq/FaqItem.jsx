@@ -2,7 +2,7 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 
 const FaqItem = ({ title, description, isOpen, handleOpenFaq, id }) => {
     return (
-        <div className="bg-white rounded-[25px] py-5 pl-[40px] lg:py-[34px] sm:pl-[90px] lg:pl-[112px] sm:pr-[30px] lg:pr-[56px] lg:w-[925px] sm:max-w-[925px] ">
+        <div className="bg-white rounded-[25px] py-3 pl-[40px] sm:py-5 lg:py-[34px] sm:pl-[90px] lg:pl-[112px] sm:pr-[30px] lg:pr-[56px] xl:w-[800px] 2xl:w-[925px]">
             <div onClick={() => handleOpenFaq(id)} className="cursor-pointer relative">
                 <button className={`absolute top-1/2 -translate-y-1/2 left-[-30px] sm:left-[-64px] w-5 h-5 sm:w-8 sm:h-8 rounded-full flex items-center justify-center cursor-pointer ${isOpen ? "bg-white border border-[#FF624C] rotate-90" : "bg-[#FF624C]"} transition duration-300`}>
                     <LiaAngleRightSolid className={`${isOpen ? "text-[#FF624C]" : "text-white"} text-xs sm:text-base`} />

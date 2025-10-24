@@ -8,21 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import CartIcon from "../../icons/CartIcon";
 import UserIcon from "../../icons/UserIcon";
 import { setInputValue } from "../../slices/menuSlice";
-import { RxCross2 } from "react-icons/rx";
-import { clearCategory } from "../../slices/productsSlice";
+import { RxCross1, RxCross2 } from "react-icons/rx";
 import { GoTriangleDown } from "react-icons/go";
 import scrollToSection from "../../utils/scrollToSection";
 import logo from "../../../public/images/logo.webp"
-
-const categories = [
-    { name: "Computers & Tablets", url: "/products-list?q=Computers & Tablets" },
-    { name: "Mobile & Accessories", url: "/products-list?q=Mobiles & Accessories" },
-    { name: "TV & Home Theater", url: "/products-list?q=TV & Home Theater" },
-    { name: "Audio & Headphones", url: "/products-list?q=Audio & Headphones" },
-    { name: "Cameras & Camcorders", url: "/products-list?q=Cameras & Camcorders" },
-    { name: "Gaming Equipment", url: "/products-list?q=Gaming Equipment" },
-    { name: "Home Appliances", url: "/products-list?q=Home Appliances" }
-];
+import { categories } from "../../constants/data";
+import { useMediaQuery } from "react-responsive"
 
 const StickyPart = () => {
     // States
@@ -37,6 +28,7 @@ const StickyPart = () => {
     const { user, loading } = useSelector(state => state.auth);
     const { totalPrice } = useSelector(state => state.cart);
     const { inputValue } = useSelector(state => state.menu);
+    const reduxCategory = useSelector(state => state.products.category);
 
     // Extra hooks
     const dispatch = useDispatch();
@@ -46,6 +38,7 @@ const StickyPart = () => {
     const menuRef = useRef(null);
     const inputRef = useRef(null);
     const location = useLocation();
+    const isMobile = useMediaQuery({ maxWidth: 639 });
 
     const handleOpenMenu = () => {
         setShowMenu(true);
@@ -84,11 +77,10 @@ const StickyPart = () => {
     // This is for showing the fixed nav when scrolled at a certain length
     useEffect(() => {
         const handleScroll = () => {
-            const topPart = document.getElementById("top-part");
             const middlePart = document.getElementById("middle-part");
             const bottomPart = document.getElementById("bottom-part");
 
-            if (window.scrollY >= (topPart.offsetHeight + middlePart.offsetHeight + bottomPart.offsetHeight) + 1) {
+            if (window.scrollY >= (middlePart.offsetHeight + bottomPart.offsetHeight) + 1) {
                 setShowFixedNav(true);
             }
             else {
@@ -164,7 +156,7 @@ const StickyPart = () => {
             {/* ----Main navbar---- */}
             <nav
                 id="sticky-nav"
-                className={`${showFixedNav ? "block" : "hidden"} transition-all duration-300 sm:px-5 2xl:px-0 shadow-md bg-white p-3 fixed top-0 left-0 w-full z-70  border-b border-gray-100`}
+                className={`${showFixedNav ? "block" : "hidden"} transition-all duration-300 sm:px-5 2xl:px-0 shadow-md bg-white py-[16px] fixed top-0 left-0 w-full z-70 border-b border-gray-100`}
             >
                 <Container>
                     <div className="flex items-center justify-between">
@@ -172,11 +164,12 @@ const StickyPart = () => {
                         <div className={`flex items-center gap-2 ${showInput ? "hidden" : ""}`}>
                             <button
                                 onClick={handleOpenMenu}
-                                className="p-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                                className="md:p-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
                                 aria-label="Open Menu"
                             >
-                                <FaBars className="text-[#303030] text-xl sm:text-2xl" />
+                                <FaBars className="text-[#303030] mb-1 sm:mb-0 text-lg sm:text-xl md:text-2xl" />
                             </button>
+                            
                             <Link to="/">
                                 <img
                                     className="w-[110px] sm:w-full object-contain"
@@ -187,29 +180,25 @@ const StickyPart = () => {
                         </div>
 
                         {/* Middle: Search bar */}
-                        <div className="relative flex-1 max-w-xl mx-4" ref={searchRef}>
+                        <div className={`relative mx-0 sm:mx-4 ${!isMobile && "flex-1 max-w-xl"} ${showInput && "w-[90%] mx-auto pr-2"}`} ref={searchRef}>
                             <input
                                 ref={inputRef}
                                 value={inputValue}
                                 onChange={handleSearchProducts}
-                                className={`${showInput ? "inline" : "hidden"} sm:inline w-full border border-gray-300 rounded-lg py-2 pl-4 pr-9 sm:py-3 sm:pl-5 sm:pr-11 text-sm text-[#303030] outline-none transition duration-200 focus:ring-1 focus:ring-[#FF624C] placeholder:font-semibold`}
+                                className={`${showInput ? "inline" : "hidden"} sm:inline w-full border border-[#E5E5E5] rounded-lg py-2 pl-4 pr-9 sm:py-3 sm:pl-5 sm:pr-11 text-sm text-[#303030] outline-none transition duration-200 focus:ring-1 focus:ring-[#FF624C] placeholder:font-semibold`}
                                 type="text"
                                 placeholder="Search In e-shop"
                             />
 
-                            {window.innerWidth <= 640 ? (
-                                <TfiSearch onClick={() => setShowInput(true)} className="text-xl absolute top-1/2 right-4 -translate-y-1/2 text-[#303030]" />
-                            ) : (
-                                <TfiSearch className="text-xl absolute top-1/2 right-4 -translate-y-1/2 text-gray-500" />
-                            )}
+                            <TfiSearch className={`text-lg absolute top-1/2 right-6 -translate-y-1/2 hidden ${(showInput || !isMobile) && "inline"}`} />
 
-                            <RxCross2 onClick={handleHideSearchAndClear} className={`absolute top-1/2 -translate-y-1/2 -right-7 text-2xl text-[#303030] ${showInput ? "" : "hidden"}`} />
+                            <RxCross1 onClick={handleHideSearchAndClear} className={`absolute top-1/2 -translate-y-1/2 -right-4.5 text-xl text-[#303030] ${showInput ? "" : "hidden"}`} />
 
                             {/* Search Results */}
                             {products.length > 0 && showProducts && (
                                 <ul
                                     ref={productsRef}
-                                    className="absolute left-0 w-full bg-white shadow-lg rounded-md border border-gray-200 mt-2 z-50 max-h-64 overflow-y-auto animate-fadeIn"
+                                    className="absolute left-0 w-full bg-white shadow-lg rounded-md border border-gray-200 mt-2 z-50 max-h-64 overflow-y-auto"
                                 >
                                     {products.map((p) => (
                                         <Link
@@ -218,7 +207,7 @@ const StickyPart = () => {
                                             onClick={handleHideSearchAndClear}
                                         >
                                             <li className="px-4 py-2 cursor-pointer hover:bg-[#FFF2F0] transition-colors">
-                                                <span className="font-medium text-gray-800">{p.title}</span>
+                                                <span className="font-medium text-[#303030]">{p.title}</span>
                                             </li>
                                         </Link>
                                     ))}
@@ -226,34 +215,49 @@ const StickyPart = () => {
                             )}
                         </div>
 
-                        {/* Right side: Cart + User */}
-                        <div className={`flex gap-[25px] sm:gap-[50px] lg:gap-[90px] items-center ${showInput ? "hidden" : ""}`}>
-                            {/* Cart */}
-                            <div className="flex relative items-center gap-5 sm:after:content-[] sm:after:absolute sm:after:top-1/2 sm:after:right-[-25px] lg:after:right-[-45px] sm:after:w-[1px] sm:after:h-[32px] sm:after:bg-[#979797] sm:after:-translate-y-1/2 sm:after:-translate-x-1/2">
-                                <Link to="/cart" className="relative">
-                                    <CartIcon />
-                                </Link>
-                                <div className="hidden lg:block">
-                                    <p className="text-[#303030] font-medium">Cart</p>
-                                    <span className="text-[#303030] font-bold">
-                                        ${totalPrice}
-                                    </span>
-                                </div>
+                        {/* Mobile search icon and cart + user wrapper */}
+                        <div className="flex items-center gap-[25px] sm:gap-0">
+                            {/* Extra search icon to show on devices < 640px */}
+                            <div>
+                                <TfiSearch onClick={() => setShowInput(true)} className={`text-xl ${(isMobile && !showInput) ? "inline" : "hidden"}`} />
                             </div>
 
-                            {/* User */}
-                            <Link
-                                to={user ? "/dashboard" : "/login"}
-                                className="flex items-center gap-6 hover:opacity-80 transition"
-                            >
-                                <UserIcon />
-                                <div className="hidden md:block">
-                                    <p className="text-[#303030]">
-                                        {(user && !loading) ? user.name : "Guest"}
-                                    </p>
-                                    <span className="font-bold text-[#303030]">Account</span>
-                                </div>
-                            </Link>
+                            {/* Right side: Cart + User */}
+                            <div className={`flex gap-[25px] sm:gap-[50px] lg:gap-[90px] items-center ${showInput ? "hidden" : ""}`}>
+                                {/* Cart */}
+                                <Link
+                                    to={user ? "/cart" : "/login"}
+                                    className="flex relative items-center gap-5 transition sm:after:content-[] sm:after:absolute sm:after:top-1/2 sm:after:right-[-25px] lg:after:right-[-45px] sm:after:w-[1px] sm:after:h-[32px] sm:after:bg-[#979797] sm:after:-translate-y-1/2 sm:after:-translate-x-1/2 hover:opacity-80"
+                                >
+                                    <div className="w-[28px] sm:w-[32px]">
+                                        <CartIcon width="full" />
+                                    </div>
+
+                                    <div className="hidden lg:block">
+                                        <p className="text-[#303030] font-['Montserrat'] leading-6">Cart</p>
+                                        <span className="text-[#303030] font-['Montserrat'] leading-6 font-bold">
+                                            ${totalPrice}
+                                        </span>
+                                    </div>
+                                </Link>
+
+                                {/* User */}
+                                <Link
+                                    to={user ? "/dashboard" : "/login"}
+                                    className="flex items-center gap-5 hover:opacity-80 transition"
+                                >
+                                    <div className="w-[24px] sm:w-[28px]">
+                                        <UserIcon width="full" />
+                                    </div>
+
+                                    <div className="hidden md:block">
+                                        <p className="text-[#303030] font-['Montserrat'] leading-6">
+                                            {(user && !loading) ? user.name : "Login"}
+                                        </p>
+                                        <span className="text-[#303030] font-['Montserrat'] leading-6 font-bold">Account</span>
+                                    </div>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </Container>
@@ -278,7 +282,7 @@ const StickyPart = () => {
             {/* ----Sidebar Menu---- */}
             <div
                 ref={menuRef}
-                className={`fixed top-0 left-0 h-screen w-[320px] z-70 bg-white rounded-r-2xl shadow-xl transform ${showMenu ? "translate-x-0" : "-translate-x-full"
+                className={`fixed inset-0 w-[320px] z-70 bg-white rounded-r-2xl shadow-xl transform ${showMenu ? "translate-x-0" : "-translate-x-full"
                     } transition-transform duration-500 ease-in-out`}
             >
                 {/* Header */}
@@ -309,17 +313,16 @@ const StickyPart = () => {
 
                         {/* ----Categories---- */}
                         {isAllCategoriesOpen && (
-                            <div className="pl-9 flex flex-col items-start gap-y-3 mt-1">
+                            <div className="pl-9 flex flex-col items-start gap-y-4 mt-4">
                                 {categories.map((c) => (
                                     <Link
                                         onClick={() => {
-                                            dispatch(clearCategory(""));
                                             setIsAllCategoriesOpen(false);
                                             handleCloseMenu();
                                         }}
                                         key={c.name}
                                         to={c.url}
-                                        className="border-b border-[#CBCBCB] text-[#FF624C]"
+                                        className={`text-base hover:text-[#FF624C] ${c.name === reduxCategory ? "text-[#FF624C]" : "text-[#303030]"}`}
                                     >
                                         {c.name}
                                     </Link>
@@ -329,8 +332,7 @@ const StickyPart = () => {
                     </li>
 
                     {[
-                        { name: "Products", url: "/products-list" },
-                        { name: "Blog", url: "/blog" },
+                        { name: "Products", url: "/products" },
                         { name: "Contact", url: "/contact" },
                     ].map((item, index) => (
                         <li key={index}>
@@ -347,6 +349,14 @@ const StickyPart = () => {
                     <li>
                         <button
                             className="text-lg font-medium text-[#303030] hover:text-[#FF624C] transition-colors cursor-pointer"
+                            onClick={() => ScrollTo("new-arrival")}
+                        >
+                            New Arrival
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            className="text-lg font-medium text-[#303030] hover:text-[#FF624C] transition-colors cursor-pointer"
                             onClick={() => ScrollTo("spring-sale")}
                         >
                             LIMITED SALE
@@ -358,14 +368,6 @@ const StickyPart = () => {
                             onClick={() => ScrollTo("best-seller")}
                         >
                             Best Seller
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            className="text-lg font-medium text-[#303030] hover:text-[#FF624C] transition-colors cursor-pointer"
-                            onClick={() => ScrollTo("new-arrival")}
-                        >
-                            New Arrival
                         </button>
                     </li>
                 </ul>

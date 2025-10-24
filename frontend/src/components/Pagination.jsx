@@ -42,6 +42,8 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
         return pages;
     }
 
+    
+
     const pageNumbers = generatePageNumbers();
 
     return (
@@ -49,10 +51,10 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
             {/* Prev */}
             <button
                 onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                className="px-2 py-1 cursor-pointer disabled:opacity-50"
+                className="px-2 py-1 cursor-pointer disabled:opacity-50 disabled:hover:text-black hover:text-[#FF624C]"
                 disabled={currentPage === 1}
             >
-                <LiaAngleLeftSolid size={22} />
+                <LiaAngleLeftSolid size={23} />
             </button>
 
             {/* Numbers */}
@@ -60,10 +62,12 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
                 {pageNumbers.map((page, idx) => (
                     <button
                         key={idx}
-                        onClick={() => typeof page === "number" && onPageChange(page)}
+                        onClick={() => {
+                            typeof page === "number" && onPageChange(page);
+                        }}
                         className={`px-3 py-1 sm:px-5 sm:py-2 text-lg font-semibold rounded-md transition-colors
-              ${currentPage === page ? "bg-[#FF624C] text-white" : "hover:bg-gray-200"} 
-              ${page === "..." ? "cursor-default" : "cursor-pointer"}`}
+                        ${currentPage === page ? "bg-[#FF624C] text-white" : "hover:bg-gray-200"} 
+                        ${page === "..." ? "cursor-default" : "cursor-pointer"}`}
                         disabled={page === "..."}
                     >
                         {page}
@@ -74,10 +78,10 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
             {/* Next */}
             <button
                 onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                className="px-2 py-1 cursor-pointer disabled:opacity-50"
+                className="px-2 py-1 cursor-pointer disabled:opacity-50 disabled:hover:text-black hover:text-[#FF624C]"
                 disabled={currentPage === totalPages}
             >
-                <LiaAngleRightSolid size={22} />
+                <LiaAngleRightSolid size={23} />
             </button>
         </div>
     );
